@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/products")
 @RestController
@@ -42,7 +41,6 @@ public class ProductQueryController {
     public ResponseEntity<Success<Page<ProductDetailResponse>>> search(
         @SearchCondition ProductSearchCondition searchCondition
     ) {
-        log.info("##### search {}", searchCondition);
         Page<ProductDetailResponse> response = productQueryAdapter.search(searchCondition)
             .map(ProductDetailResponse::from);
 
