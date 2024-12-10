@@ -1,6 +1,8 @@
 package com.sparta.logistics.product.infrastructure.persistence.entity;
 
+import com.sparta.logistics.product.domain.Company;
 import com.sparta.logistics.product.domain.Product;
+import com.sparta.logistics.product.domain.ProductForCreate;
 import com.sparta.logistics.product.domain.vo.Quantity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,9 +37,31 @@ public class ProductEntity extends BaseEntity {
     @Column(nullable = false)
     private Integer quantity;
 
+    public ProductEntity(Long id, Long hubId, Long companyId, String name, Integer quantity, Long createdBy) {
+        super();
+        super.createdFrom(createdBy);
+
+        this.id = id;
+        this.hubId = hubId;
+        this.companyId = companyId;
+        this.name = name;
+        this.quantity = quantity;
+    }
+
     public Product toDomain() {
         return new Product(
             id, hubId, companyId, Quantity.valueOf(quantity), name
+        );
+    }
+
+    public static ProductEntity of(ProductForCreate product, Company company) {
+        return new ProductEntity(
+            null,
+            company.getHubId(),
+            company.getId(),
+            product.getName(),
+            product.getQuantity(),
+            product.getCreatedBy()
         );
     }
 }
