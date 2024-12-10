@@ -27,11 +27,13 @@ public class DeliveryPersonAdapter implements DeliveryPersonPort {
     @Override
     @Transactional
     public DeliveryPerson createDeliveryPerson(DeliveryPerson requestDto) {
-        validateUserRole(requestDto);
+        UserDetailResponse user = authPort.findUser(requestDto.userId());
+
+        validateUserRole(user);
 
         hubPort.getHubById(requestDto.hubId());
 
-        DeliveryPersonEntity entity = deliveryPersonRepository.save(DeliveryPersonEntity.from(requestDto));
+        DeliveryPersonEntity entity = deliveryPersonRepository.save(DeliveryPersonEntity.from(requestDto, user));
 
         return DeliveryPerson.from(entity);
     }
@@ -49,9 +51,7 @@ public class DeliveryPersonAdapter implements DeliveryPersonPort {
         return deliveryPersonRepository.findAllByIsDeletedFalse(pageable).map(DeliveryPerson::from);
     }
 
-    private void validateUserRole(DeliveryPerson requestDto) {
-        UserDetailResponse user = authPort.findUser(requestDto.userId());
-
+    private void validateUserRole(UserDetailResponse user) {
         if (!user.role().equals("MASTER")) {
             throw new IllegalArgumentException("배송 담당자 생성 권한이 없습니다.");
         }

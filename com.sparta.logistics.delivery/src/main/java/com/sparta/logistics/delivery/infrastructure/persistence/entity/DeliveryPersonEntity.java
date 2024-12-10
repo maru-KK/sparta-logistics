@@ -2,6 +2,7 @@ package com.sparta.logistics.delivery.infrastructure.persistence.entity;
 
 import com.sparta.logistics.delivery.domain.DeliveryPerson;
 import com.sparta.logistics.delivery.domain.vo.DeliveryPersonType;
+import com.sparta.logistics.delivery.infrastructure.external.auth.dto.UserDetailResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -34,11 +35,11 @@ public class DeliveryPersonEntity extends BaseEntity {
     @Column(nullable = false)
     private Integer sequence;
 
-    public static DeliveryPersonEntity from(DeliveryPerson request) {
+    public static DeliveryPersonEntity from(DeliveryPerson request, UserDetailResponse user) {
         return DeliveryPersonEntity.builder()
-                .userId(request.userId())
+                .userId(user.userId())
                 .hubId(request.hubId())
-                .snsId(request.snsId())
+                .snsId(user.snsAccount())
                 .type(request.type())
                 .sequence(1)
                 .build();

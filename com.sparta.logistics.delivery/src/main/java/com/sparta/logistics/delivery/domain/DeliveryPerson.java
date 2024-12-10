@@ -17,12 +17,12 @@ public record DeliveryPerson(
         String createdBy
 ) {
 
-    public DeliveryPerson(Long userId, Long hubId, String snsId, DeliveryPersonType type, Integer sequence) {
-        this(null, userId, hubId, snsId, type, sequence, null, null);
+    public DeliveryPerson(Long userId, Long hubId, DeliveryPersonType type, Integer sequence) {
+        this(null, userId, hubId, null, type, sequence, null, null);
     }
 
     public static DeliveryPerson from(DeliveryPersonCreateRequestDto dto) {
-        return new DeliveryPerson(dto.userId(), dto.hubId(), dto.snsId(), dto.type(), dto.sequence());
+        return new DeliveryPerson(dto.userId(), dto.hubId(), dto.type(), dto.sequence());
     }
 
     public static DeliveryPerson from(DeliveryPersonEntity entity) {
