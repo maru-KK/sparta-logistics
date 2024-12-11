@@ -19,6 +19,12 @@ public class Product {
         this.name = name;
     }
 
+    public Product updateFrom(ProductForUpdate update) {
+        this.quantity = update.getQuantity();
+        this.name = update.getName();
+        return this;
+    }
+
     public Long getId() {
         return id;
     }
@@ -33,6 +39,10 @@ public class Product {
 
     public Quantity getQuantity() {
         return quantity;
+    }
+
+    public int getIntQuantity() {
+        return quantity.getQuantity();
     }
 
     public String getName() {
