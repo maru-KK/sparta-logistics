@@ -68,7 +68,7 @@ public class ProductCommandController {
         return ApiResponse.success(response, HttpStatus.OK);
     }
 
-    @PatchMapping("/quantity/{productId}")
+    @PatchMapping("/{productId}/quantity")
     public ResponseEntity<Success<Response>> changeProductQuantity(
         @PathVariable("productId") Long productId,
         @RequestBody ProductQuantityModification.Request request,
