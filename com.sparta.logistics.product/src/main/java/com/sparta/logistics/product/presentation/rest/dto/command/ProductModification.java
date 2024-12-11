@@ -1,7 +1,7 @@
 package com.sparta.logistics.product.presentation.rest.dto.command;
 
 import com.sparta.logistics.product.domain.Product;
-import com.sparta.logistics.product.domain.ProductForUpdate;
+import com.sparta.logistics.product.domain.vo.ProductForUpdate;
 import com.sparta.logistics.product.domain.vo.Quantity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

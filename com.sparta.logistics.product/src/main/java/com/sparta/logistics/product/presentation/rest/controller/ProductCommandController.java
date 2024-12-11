@@ -2,12 +2,14 @@ package com.sparta.logistics.product.presentation.rest.controller;
 
 import com.sparta.logistics.product.application.service.ProductService;
 import com.sparta.logistics.product.domain.Product;
-import com.sparta.logistics.product.domain.ProductForCreate;
-import com.sparta.logistics.product.domain.ProductForUpdate;
+import com.sparta.logistics.product.domain.vo.ProductForCreate;
+import com.sparta.logistics.product.domain.vo.ProductForUpdate;
+import com.sparta.logistics.product.domain.vo.ProductForUpdateQuantity;
 import com.sparta.logistics.product.presentation.rest.dto.command.ProductCreation;
 import com.sparta.logistics.product.presentation.rest.dto.command.ProductCreation.Response;
 import com.sparta.logistics.product.presentation.rest.dto.command.ProductModification;
 import com.sparta.logistics.product.presentation.rest.dto.command.ProductModification.Request;
+import com.sparta.logistics.product.presentation.rest.dto.command.ProductQuantityModification;
 import com.sparta.logistics.product.presentation.rest.dto.security.Actor;
 import com.sparta.logistics.product.presentation.rest.dto.security.Role;
 import com.sparta.logistics.product.presentation.rest.util.ApiResponse;
@@ -56,10 +58,6 @@ public class ProductCommandController {
         // 권한 처리 로직 추가 예정
         if (!Objects.equals(request.getProductId(), productId) ||
             !Objects.equals(actor.role(), Role.COMPANY)) {
-
-            System.out.println("productId = " + productId);
-            System.out.println("request = " + request);
-            System.out.println("actor = " + actor);
             throw new IllegalArgumentException("비정상적인 접근");
         }
 
@@ -67,6 +65,24 @@ public class ProductCommandController {
         Product product = productService.updateProduct(productForUpdate, actor.userId());
 
         Response response = ProductModification.Response.from(product);
+        return ApiResponse.success(response, HttpStatus.OK);
+    }
+
+    @PatchMapping("/quantity/{productId}")
+    public ResponseEntity<Success<Response>> changeProductQuantity(
+        @PathVariable("productId") Long productId,
+        @RequestBody ProductQuantityModification.Request request,
+        @LoginActor Actor actor
+    ) {
+        if (!Objects.equals(request.getProductId(), productId) ||
+            !Objects.equals(actor.role(), Role.COMPANY)) {
+            throw new IllegalArgumentException("비정상적인 접근");
+        }
+
+        ProductForUpdateQuantity productForUpdate = request.toDomain();
+        Product product = productService.changeProductQuantity(productForUpdate, actor.userId());
+
+        Response response = ProductQuantityModification.Response.from(product);
         return ApiResponse.success(response, HttpStatus.OK);
     }
 }

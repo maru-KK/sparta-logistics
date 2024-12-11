@@ -1,8 +1,10 @@
 package com.sparta.logistics.product.infrastructure.persistence.entity;
 
+import com.sparta.logistics.product.application.exception.ProductLogicException;
 import com.sparta.logistics.product.domain.Company;
 import com.sparta.logistics.product.domain.Product;
-import com.sparta.logistics.product.domain.ProductForCreate;
+import com.sparta.logistics.product.domain.vo.ProductForCreate;
+import com.sparta.logistics.product.domain.vo.ProductForUpdateQuantity;
 import com.sparta.logistics.product.domain.vo.Quantity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -73,5 +75,26 @@ public class ProductEntity extends BaseEntity {
         this.companyId = product.getCompanyId();
 
         return this;
+    }
+
+    public ProductEntity changeQuantity(ProductForUpdateQuantity product, Long updatedBy) {
+        System.out.println(product);
+        if (product.isDecrease()) {
+            System.out.println("감소");
+            decreaseQuantity(product.getChangedCount());
+            super.updatedFrom(updatedBy);
+            return this;
+        }
+        System.out.println("증가");
+        this.quantity += product.getChangedCount();
+        super.updatedFrom(updatedBy);
+        return this;
+    }
+
+    private void decreaseQuantity(Integer decreaseCount) {
+        if (quantity < decreaseCount) {
+            throw new ProductLogicException("상품 재고가 충분하지 않습니다.");
+        }
+        quantity -= decreaseCount;
     }
 }
