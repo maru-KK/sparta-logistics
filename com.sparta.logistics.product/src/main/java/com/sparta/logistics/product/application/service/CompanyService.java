@@ -13,8 +13,8 @@ public class CompanyService {
 
     private final HubOutputPort hubOutputPort;
 
-    public Company validateAndGetSupplierCompany(ProductForCreate product) {
-        Company company = hubOutputPort.findCompany(product.getCreatedBy())
+    public Company validateAndGetSupplierCompany(Long userId) {
+        Company company = hubOutputPort.findCompany(userId)
             .orElseThrow(() -> new ProductLogicException("유저 정보에 해당하는 업체를 찾을 수 없습니다."));
 
         if (company.isConsumer()) {

@@ -9,6 +9,9 @@ import com.sparta.logistics.product.domain.Company;
 import com.sparta.logistics.product.domain.Product;
 import com.sparta.logistics.product.domain.ProductForCreate;
 import com.sparta.logistics.product.domain.ProductForUpdate;
+import com.sparta.logistics.product.domain.exception.DomainException;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,26 +23,31 @@ public class ProductService {
     private final ProductQueryOutputPort productQueryOutputPort;
     private final CompanyService companyService;
 
-    public Product createProduct(ProductForCreate product) {
+    private <T> T handleException(Supplier<T> action, Function<String, RuntimeException> exceptionSupplier) {
         try {
-            Company company = companyService.validateAndGetSupplierCompany(product);
-            return productOutputPort.saveOne(product, company);
-
-        } catch (ProductLogicException e) {
-            throw new ProductCreateFailureException(e.getMessage());
+            return action.get();
+        } catch (ProductLogicException | DomainException e) {
+            throw exceptionSupplier.apply(e.getMessage());
         }
     }
 
+    public Product createProduct(ProductForCreate product) {
+        return handleException(() -> {
+            Company company = companyService.validateAndGetSupplierCompany(product.getCreatedBy());
+            return productOutputPort.saveOne(product, company);
+
+        }, ProductCreateFailureException::new);
+    }
+
     public Product updateProduct(ProductForUpdate productForUpdate, Long updatedBy) {
-        try {
+        return handleException(() -> {
+            Company company = companyService.validateAndGetSupplierCompany(updatedBy);
             Product product = productQueryOutputPort.findById(productForUpdate.getId())
                 .orElseThrow(() -> new ProductLogicException("유효하지 않은 상품 식별자"));
 
-            product = product.updateFrom(productForUpdate);
+            product = product.updateFrom(productForUpdate, company);
             return productOutputPort.update(product, updatedBy);
 
-        } catch (ProductLogicException e) {
-            throw new ProductUpdateFailureException(e.getMessage());
-        }
+        }, ProductUpdateFailureException::new);
     }
 }
