@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Entity
 @Getter
 @NoArgsConstructor
@@ -27,10 +25,10 @@ public class HubRouteEntity {
     @Column(name = "destination_hub_id", nullable = false)
     private Long destinationHubId;
 
-    @Column(name = "actual_duration", nullable = false)
-    private Integer actualDuration;
-
     @Column(name = "actual_distance", nullable = false)
     private Double actualDistance;
+
+    @Column(name = "actual_duration", nullable = false)
+    private Integer actualDuration;
 
 }

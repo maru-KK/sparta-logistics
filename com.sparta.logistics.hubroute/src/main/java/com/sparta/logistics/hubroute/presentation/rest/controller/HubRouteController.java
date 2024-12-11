@@ -15,6 +15,12 @@ public class HubRouteController {
 
     private final HubRouteService hubRouteService;
 
+    @PostMapping("/calculate-routes")
+    public ResponseEntity<String> calculateAllRoutes() {
+        hubRouteService.calculateAndSaveAllRoutes();
+        return ResponseEntity.ok("모든 경로가 저장되었습니다.");
+    }
+
     @GetMapping("/{hubRouteId}")
     public ResponseEntity<HubRouteResponseDto> getRouteById(@PathVariable("hubRouteId") Long hubRouteId) {
         HubRouteResponseDto hubRoute = hubRouteService.getRouteById(hubRouteId);

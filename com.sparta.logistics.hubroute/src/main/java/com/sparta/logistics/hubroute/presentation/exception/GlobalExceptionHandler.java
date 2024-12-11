@@ -1,7 +1,5 @@
 package com.sparta.logistics.hubroute.presentation.exception;
 
-import com.sparta.logistics.hubcompany.presentation.exception.exceptions.DuplicateResourceException;
-import com.sparta.logistics.hubcompany.presentation.exception.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -24,13 +22,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errors);
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException ex) {
+    @ExceptionHandler(com.sparta.logistics.hubroute.presentation.exception.exceptions.ResourceNotFoundException.class)
+    public ResponseEntity<String> handleResourceNotFoundException(com.sparta.logistics.hubroute.presentation.exception.exceptions.ResourceNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
-    @ExceptionHandler(DuplicateResourceException.class)
-    public ResponseEntity<String> handleDuplicateResourceException(DuplicateResourceException ex) {
+    @ExceptionHandler(com.sparta.logistics.hubroute.presentation.exception.exceptions.DuplicateResourceException.class)
+    public ResponseEntity<String> handleDuplicateResourceException(com.sparta.logistics.hubroute.presentation.exception.exceptions.DuplicateResourceException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 }

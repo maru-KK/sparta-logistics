@@ -28,6 +28,12 @@ ext {
 }
 
 dependencies {
+	// HTTP 클라이언트 의존성 (Apache HttpClient)
+	implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+
+	// org.json 라이브러리 (JSON 처리)
+	implementation 'org.json:json:20231013'
+
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'

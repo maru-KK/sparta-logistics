@@ -16,6 +16,10 @@ spring:
         format_sql: true
         use_sql_comments: true
 
+service:
+    api:
+      key: "5b3ce3597851110001cf6248cc975e03a3204113bfb9c297b9055260"
+
 server:
   port: 19040
 
