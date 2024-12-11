@@ -7,9 +7,10 @@ import com.sparta.logistics.product.application.outputport.ProductOutputPort;
 import com.sparta.logistics.product.application.outputport.ProductQueryOutputPort;
 import com.sparta.logistics.product.domain.Company;
 import com.sparta.logistics.product.domain.Product;
-import com.sparta.logistics.product.domain.ProductForCreate;
-import com.sparta.logistics.product.domain.ProductForUpdate;
+import com.sparta.logistics.product.domain.vo.ProductForCreate;
+import com.sparta.logistics.product.domain.vo.ProductForUpdate;
 import com.sparta.logistics.product.domain.exception.DomainException;
+import com.sparta.logistics.product.domain.vo.ProductForUpdateQuantity;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,7 @@ public class ProductService {
 
     public Product createProduct(ProductForCreate product) {
         return handleException(() -> {
+
             Company company = companyService.validateAndGetSupplierCompany(product.getCreatedBy());
             return productOutputPort.saveOne(product, company);
 
@@ -45,12 +47,26 @@ public class ProductService {
 
     public Product updateProduct(ProductForUpdate productForUpdate, Long updatedBy) {
         return handleException(() -> {
+
             Company company = companyService.validateAndGetSupplierCompany(updatedBy);
             Product product = productQueryOutputPort.findById(productForUpdate.getId())
                 .orElseThrow(() -> new ProductLogicException("유효하지 않은 상품 식별자"));
 
             product = product.updateFrom(productForUpdate, company);
             return productOutputPort.update(product, updatedBy);
+
+        }, ProductUpdateFailureException::new);
+    }
+
+    public Product changeProductQuantity(ProductForUpdateQuantity productForUpdate, Long updatedBy) {
+        return handleException(() -> {
+
+            Company company = companyService.validateAndGetSupplierCompany(updatedBy);
+            Product product = productQueryOutputPort.findById(productForUpdate.getId())
+                .orElseThrow(() -> new ProductLogicException("유효하지 않은 상품 식별자"));
+            product.validateMatchedCompany(company);
+
+            return productOutputPort.changeProductQuantity(productForUpdate, updatedBy);
 
         }, ProductUpdateFailureException::new);
     }

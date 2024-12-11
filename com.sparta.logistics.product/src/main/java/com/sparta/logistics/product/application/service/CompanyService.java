@@ -3,7 +3,6 @@ package com.sparta.logistics.product.application.service;
 import com.sparta.logistics.product.application.exception.ProductLogicException;
 import com.sparta.logistics.product.application.outputport.HubOutputPort;
 import com.sparta.logistics.product.domain.Company;
-import com.sparta.logistics.product.domain.ProductForCreate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

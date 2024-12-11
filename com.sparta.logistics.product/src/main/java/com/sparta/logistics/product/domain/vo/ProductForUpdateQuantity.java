@@ -1,8 +1,6 @@
 package com.sparta.logistics.product.domain.vo;
 
-import lombok.ToString;
 
-@ToString
 public class ProductForUpdateQuantity {
 
     private Long id;
