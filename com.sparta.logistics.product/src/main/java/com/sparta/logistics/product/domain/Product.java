@@ -46,11 +46,7 @@ public class Product {
         return companyId;
     }
 
-    public Quantity getQuantity() {
-        return quantity;
-    }
-
-    public int getIntQuantity() {
+    public int getQuantity() {
         return quantity.getQuantity();
     }
 

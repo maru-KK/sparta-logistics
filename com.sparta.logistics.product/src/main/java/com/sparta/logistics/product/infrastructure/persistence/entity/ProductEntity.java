@@ -68,7 +68,7 @@ public class ProductEntity extends BaseEntity {
     public ProductEntity updateFrom(Product product, Long updatedBy) {
         super.updatedFrom(updatedBy);
         this.name = product.getName();
-        this.quantity = product.getIntQuantity();
+        this.quantity = product.getQuantity();
         this.hubId = product.getHubId();
         this.companyId = product.getCompanyId();
 

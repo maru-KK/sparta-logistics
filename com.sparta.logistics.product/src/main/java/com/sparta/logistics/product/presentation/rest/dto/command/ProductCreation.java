@@ -5,7 +5,6 @@ import com.sparta.logistics.product.domain.ProductForCreate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 public class ProductCreation {
 
@@ -32,7 +31,7 @@ public class ProductCreation {
         private Integer quantity;
 
         public static Response from(Product product) {
-            return new Response(product.getId(), product.getName(), product.getQuantity().getQuantity());
+            return new Response(product.getId(), product.getName(), product.getQuantity());
         }
     }
 }

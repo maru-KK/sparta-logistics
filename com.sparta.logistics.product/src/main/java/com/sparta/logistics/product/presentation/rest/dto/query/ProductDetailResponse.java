@@ -21,7 +21,7 @@ public class ProductDetailResponse {
             product.getId(),
             product.getHubId(),
             product.getCompanyId(),
-            product.getQuantity().getQuantity(),
+            product.getQuantity(),
             product.getName()
         );
     }
