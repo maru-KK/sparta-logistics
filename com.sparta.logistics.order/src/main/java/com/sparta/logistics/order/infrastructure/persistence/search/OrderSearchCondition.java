@@ -1,6 +1,7 @@
 package com.sparta.logistics.order.infrastructure.persistence.search;
 
 
+import com.sparta.logistics.order.domain.order.vo.OrderStatus;
 import com.sparta.logistics.order.infrastructure.persistence.search.sort.OrderSort;
 import com.sparta.logistics.order.infrastructure.persistence.search.sort.Sort;
 import java.util.List;
@@ -13,7 +14,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class ProductSearchCondition {
+public class OrderSearchCondition {
 
     private static final int DEFAULT_PAGE = 0;
 
@@ -26,21 +27,27 @@ public class ProductSearchCondition {
     private final Sort sort;
 
     // filter option
-    private final Long hubId;
-    private final Long companyId;
-    private final String keyword;
+    private final Long supplyCompanyId;
+    private final Long consumeCompanyId;
+    private final OrderStatus status;
 
-    public static ProductSearchCondition of(
+    public static OrderSearchCondition of(
         String requestPage, String requestSize, String requestSort,
-        String requestHubId, String requestCompanyId, String requestKeyword
+        String requestSupplyCompanyId, String requestConsumeCompanyId,
+        String requestStatus
     ) {
         int page = parseIntPageOrDefault(requestPage);
         int size = parseIntSizeOrDefault(requestSize);
         Sort sort = OrderSort.valueOf(requestSort);
-        Long hubId = parseLongOrNull(requestHubId);
-        Long companyId = parseLongOrNull(requestCompanyId);
 
-        return new ProductSearchCondition(page, size, sort, hubId, companyId, requestKeyword);
+        Long supplyCompanyId = parseLongOrNull(requestSupplyCompanyId);
+        Long consumeCompanyId = parseLongOrNull(requestConsumeCompanyId);
+        OrderStatus status = OrderStatus.of(requestStatus);
+
+        return new OrderSearchCondition(
+            page, size, sort,
+            supplyCompanyId, consumeCompanyId, status
+        );
     }
 
     private static int parseIntPageOrDefault(String requestPage) {
