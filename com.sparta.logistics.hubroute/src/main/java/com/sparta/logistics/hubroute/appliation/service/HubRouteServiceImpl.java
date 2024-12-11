@@ -1,5 +1,6 @@
 package com.sparta.logistics.hubroute.appliation.service;
 
+import com.sparta.logistics.hubroute.appliation.dto.HubResponseDto;
 import com.sparta.logistics.hubroute.appliation.dto.HubRouteResponseDto;
 import com.sparta.logistics.hubroute.infrastructure.client.HubCompanyServiceFeignClient;
 import com.sparta.logistics.hubroute.infrastructure.persistence.entity.HubRouteEntity;
@@ -39,5 +40,23 @@ public class HubRouteServiceImpl implements HubRouteService {
                 .orElseThrow(() -> new ResourceNotFoundException("경로를 찾을 수 없습니다: 출발 허브("
                         + originHubId + "), 도착 허브(" + destinationHubId + ")"));
         return new HubRouteResponseDto(hubRoute);
+    }
+
+    public void createAllRoutes() {
+        List<HubResponseDto> hubs = hubCompanyServiceFeignClient.getAllHubs();
+
+        for (HubResponseDto originHub : hubs) {
+            for (HubResponseDto destinationHub : hubs) {
+                if (!originHub.getHubId().equals(destinationHub.getHubId())) {
+                    HubRouteEntity route = HubRouteEntity.builder()
+                            .originHubId(originHub.getHubId())
+                            .destinationHubId(destinationHub.getHubId())
+                            .actualDuration(0)  // 소요시간은 수동으로 설정하거나 API로 계산해야 함
+                            .actualDistance(0.0) // 이동거리도
+                            .build();
+                    hubRouteRepository.save(route);
+                }
+            }
+        }
     }
 }
