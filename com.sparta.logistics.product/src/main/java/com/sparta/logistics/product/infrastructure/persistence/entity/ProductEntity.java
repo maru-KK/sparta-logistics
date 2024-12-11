@@ -64,4 +64,14 @@ public class ProductEntity extends BaseEntity {
             product.getCreatedBy()
         );
     }
+
+    public ProductEntity updateFrom(Product product, Long updatedBy) {
+        super.updatedFrom(updatedBy);
+        this.name = product.getName();
+        this.quantity = product.getIntQuantity();
+        this.hubId = product.getHubId();
+        this.companyId = product.getCompanyId();
+
+        return this;
+    }
 }
