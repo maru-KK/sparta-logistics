@@ -1,6 +1,7 @@
 package com.sparta.logistics.product.domain;
 
 import com.sparta.logistics.product.domain.exception.DomainException;
+import com.sparta.logistics.product.domain.vo.ProductForUpdate;
 import com.sparta.logistics.product.domain.vo.Quantity;
 import java.util.Objects;
 
@@ -28,7 +29,7 @@ public class Product {
         return this;
     }
 
-    private void validateMatchedCompany(Company company) {
+    public void validateMatchedCompany(Company company) {
         if (!Objects.equals(id, company.getId()) || !Objects.equals(hubId, company.getHubId())) {
             throw new DomainException("본인 업체의 상품이 아닙니다.");
         }

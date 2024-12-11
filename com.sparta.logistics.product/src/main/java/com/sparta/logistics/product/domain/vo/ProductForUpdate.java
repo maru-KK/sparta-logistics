@@ -1,6 +1,4 @@
-package com.sparta.logistics.product.domain;
-
-import com.sparta.logistics.product.domain.vo.Quantity;
+package com.sparta.logistics.product.domain.vo;
 
 public class ProductForUpdate {
 

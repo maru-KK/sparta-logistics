@@ -1,4 +1,4 @@
-package com.sparta.logistics.product.domain;
+package com.sparta.logistics.product.domain.vo;
 
 public class ProductForCreate {
 
