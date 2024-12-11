@@ -19,16 +19,21 @@ public class BaseEntity {
     @CreatedDate
     @Column(nullable = false)
     private LocalDateTime createdAt;
-    private String createdBy;
+    private Long createdBy;
 
     @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime updatedAt;
-    private String updatedBy;
+    private Long updatedBy;
 
     private LocalDateTime deletedAt;
-    private String deletedBy;
+    private Long deletedBy;
 
     @Column(nullable = false)
     private boolean isDeleted = false;
+
+    protected void createdFrom(Long createdBy) {
+        this.createdBy = createdBy;
+        this.updatedBy = createdBy;
+    }
 }

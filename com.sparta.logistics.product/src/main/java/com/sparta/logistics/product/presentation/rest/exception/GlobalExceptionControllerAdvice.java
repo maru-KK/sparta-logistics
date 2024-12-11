@@ -1,6 +1,7 @@
 package com.sparta.logistics.product.presentation.rest.exception;
 
 import com.sparta.logistics.product.presentation.rest.exception.exceptions.DataNotFoundException;
+import com.sparta.logistics.product.presentation.rest.exception.exceptions.InvalidAccessResourceException;
 import com.sparta.logistics.product.presentation.rest.util.ApiResponse;
 import com.sparta.logistics.product.presentation.rest.util.ApiResponse.Error;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,12 @@ public class GlobalExceptionControllerAdvice {
     public ResponseEntity<Error> exceptionHandle(DataNotFoundException exception) {
         log.error("dataNotFoundException Handle={}", exception);
         return ApiResponse.error(HttpStatus.BAD_REQUEST, exception.getMessage());
+    }
+
+    @ExceptionHandler(InvalidAccessResourceException.class)
+    public ResponseEntity<Error> exceptionHandle(InvalidAccessResourceException exception) {
+        log.error("InvalidAccessResourceException Handle={}", exception);
+        return ApiResponse.error(HttpStatus.UNAUTHORIZED, exception.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
