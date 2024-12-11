@@ -7,9 +7,9 @@ import com.sparta.logistics.product.presentation.rest.dto.command.ProductCreatio
 import com.sparta.logistics.product.presentation.rest.dto.command.ProductCreation.Response;
 import com.sparta.logistics.product.presentation.rest.dto.security.Actor;
 import com.sparta.logistics.product.presentation.rest.util.ApiResponse;
+import com.sparta.logistics.product.presentation.rest.util.ApiResponse.Success;
 import com.sparta.logistics.product.presentation.rest.util.actor.LoginActor;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +25,7 @@ public class ProductCommandController {
     private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<?> createProduct(
+    public ResponseEntity<Success<ProductCreation.Response>> createProduct(
         @RequestBody ProductCreation.Request request,
         @LoginActor Actor actor
     ) {
