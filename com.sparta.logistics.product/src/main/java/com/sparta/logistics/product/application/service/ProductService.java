@@ -1,10 +1,14 @@
 package com.sparta.logistics.product.application.service;
 
-import com.sparta.logistics.product.application.outputport.HubOutputPort;
+import com.sparta.logistics.product.application.exception.ProductCreateFailureException;
+import com.sparta.logistics.product.application.exception.ProductLogicException;
+import com.sparta.logistics.product.application.exception.ProductUpdateFailureException;
 import com.sparta.logistics.product.application.outputport.ProductOutputPort;
+import com.sparta.logistics.product.application.outputport.ProductQueryOutputPort;
 import com.sparta.logistics.product.domain.Company;
 import com.sparta.logistics.product.domain.Product;
 import com.sparta.logistics.product.domain.ProductForCreate;
+import com.sparta.logistics.product.domain.ProductForUpdate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,21 +16,30 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductService {
 
-    private final HubOutputPort hubOutputPort;
     private final ProductOutputPort productOutputPort;
+    private final ProductQueryOutputPort productQueryOutputPort;
+    private final CompanyService companyService;
 
     public Product createProduct(ProductForCreate product) {
-        Company company = validateAndGetCompany(product);
-        return productOutputPort.saveOne(product, company);
+        try {
+            Company company = companyService.validateAndGetSupplierCompany(product);
+            return productOutputPort.saveOne(product, company);
+
+        } catch (ProductLogicException e) {
+            throw new ProductCreateFailureException(e.getMessage());
+        }
     }
 
-    private Company validateAndGetCompany(ProductForCreate product) {
-        Company company = hubOutputPort.findCompany(product.getCreatedBy())
-            .orElseThrow(() -> new IllegalArgumentException("상품 생성 실패: 권한 인증 실패, 잠시 후 다시 시도해 주세요"));
+    public Product updateProduct(ProductForUpdate productForUpdate, Long updatedBy) {
+        try {
+            Product product = productQueryOutputPort.findById(productForUpdate.getId())
+                .orElseThrow(() -> new ProductLogicException("유효하지 않은 상품 식별자"));
 
-        if (company.isConsumer()) {
-            throw new IllegalArgumentException("상품 생성 실패: 권한 없음(생산업체만 상품 등록 가능)");
+            product = product.updateFrom(productForUpdate);
+            return productOutputPort.update(product, updatedBy);
+
+        } catch (ProductLogicException e) {
+            throw new ProductUpdateFailureException(e.getMessage());
         }
-        return company;
     }
 }

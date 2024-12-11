@@ -7,4 +7,6 @@ import com.sparta.logistics.product.domain.ProductForCreate;
 public interface ProductOutputPort {
 
     Product saveOne(ProductForCreate product, Company company);
+
+    Product update(Product product, Long updatedBy);
 }
