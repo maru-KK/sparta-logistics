@@ -31,9 +31,9 @@ public class SearchConditionArgumentResolver implements HandlerMethodArgumentRes
         String sort = webRequest.getParameter("sort");
 
         String supplier = webRequest.getParameter("supplier");
-        String consumer = webRequest.getParameter("consumer");
+        String product = webRequest.getParameter("product");
         String status = webRequest.getParameter("status");
 
-        return OrderSearchCondition.of(page, size, sort, supplier, consumer, status);
+        return OrderSearchCondition.of(page, size, sort, supplier, product, status);
     }
 }

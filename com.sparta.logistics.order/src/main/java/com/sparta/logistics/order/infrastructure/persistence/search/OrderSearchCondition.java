@@ -28,12 +28,12 @@ public class OrderSearchCondition {
 
     // filter option
     private final Long supplyCompanyId;
-    private final Long consumeCompanyId;
+    private final Long productId;
     private final OrderStatus status;
 
     public static OrderSearchCondition of(
         String requestPage, String requestSize, String requestSort,
-        String requestSupplyCompanyId, String requestConsumeCompanyId,
+        String requestSupplyCompanyId, String requestProductId,
         String requestStatus
     ) {
         int page = parseIntPageOrDefault(requestPage);
@@ -41,7 +41,7 @@ public class OrderSearchCondition {
         Sort sort = OrderSort.valueOf(requestSort);
 
         Long supplyCompanyId = parseLongOrNull(requestSupplyCompanyId);
-        Long consumeCompanyId = parseLongOrNull(requestConsumeCompanyId);
+        Long consumeCompanyId = parseLongOrNull(requestProductId);
         OrderStatus status = OrderStatus.of(requestStatus);
 
         return new OrderSearchCondition(
