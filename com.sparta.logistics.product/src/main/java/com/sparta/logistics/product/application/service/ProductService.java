@@ -23,6 +23,10 @@ public class ProductService {
     private final ProductQueryOutputPort productQueryOutputPort;
     private final CompanyService companyService;
 
+    /**
+     * @Param: action - 비즈니스 로직
+     * @Param: exceptionSupplier - 예외 발생 시 덮어씌워 던질 예외의 생성자
+     * */
     private <T> T handleException(Supplier<T> action, Function<String, RuntimeException> exceptionSupplier) {
         try {
             return action.get();
