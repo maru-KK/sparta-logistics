@@ -36,4 +36,8 @@ public class BaseEntity {
         this.createdBy = createdBy;
         this.updatedBy = createdBy;
     }
+
+    protected void updatedFrom(Long updatedBy) {
+        this.updatedBy = updatedBy;
+    }
 }

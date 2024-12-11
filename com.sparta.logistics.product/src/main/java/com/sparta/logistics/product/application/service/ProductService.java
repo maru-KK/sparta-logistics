@@ -1,10 +1,18 @@
 package com.sparta.logistics.product.application.service;
 
-import com.sparta.logistics.product.application.outputport.HubOutputPort;
+import com.sparta.logistics.product.application.exception.ProductCreateFailureException;
+import com.sparta.logistics.product.application.exception.ProductLogicException;
+import com.sparta.logistics.product.application.exception.ProductUpdateFailureException;
 import com.sparta.logistics.product.application.outputport.ProductOutputPort;
+import com.sparta.logistics.product.application.outputport.ProductQueryOutputPort;
 import com.sparta.logistics.product.domain.Company;
 import com.sparta.logistics.product.domain.Product;
-import com.sparta.logistics.product.domain.ProductForCreate;
+import com.sparta.logistics.product.domain.vo.ProductForCreate;
+import com.sparta.logistics.product.domain.vo.ProductForUpdate;
+import com.sparta.logistics.product.domain.exception.DomainException;
+import com.sparta.logistics.product.domain.vo.ProductForUpdateQuantity;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,21 +20,54 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductService {
 
-    private final HubOutputPort hubOutputPort;
     private final ProductOutputPort productOutputPort;
+    private final ProductQueryOutputPort productQueryOutputPort;
+    private final CompanyService companyService;
 
-    public Product createProduct(ProductForCreate product) {
-        Company company = validateAndGetCompany(product);
-        return productOutputPort.saveOne(product, company);
+    /**
+     * @Param: action - 비즈니스 로직
+     * @Param: exceptionSupplier - 예외 발생 시 덮어씌워 던질 예외의 생성자
+     * */
+    private <T> T handleException(Supplier<T> action, Function<String, RuntimeException> exceptionSupplier) {
+        try {
+            return action.get();
+        } catch (ProductLogicException | DomainException e) {
+            throw exceptionSupplier.apply(e.getMessage());
+        }
     }
 
-    private Company validateAndGetCompany(ProductForCreate product) {
-        Company company = hubOutputPort.findCompany(product.getCreatedBy())
-            .orElseThrow(() -> new IllegalArgumentException("상품 생성 실패: 권한 인증 실패, 잠시 후 다시 시도해 주세요"));
+    public Product createProduct(ProductForCreate product) {
+        return handleException(() -> {
 
-        if (company.isConsumer()) {
-            throw new IllegalArgumentException("상품 생성 실패: 권한 없음(생산업체만 상품 등록 가능)");
-        }
-        return company;
+            Company company = companyService.validateAndGetSupplierCompany(product.getCreatedBy());
+            return productOutputPort.saveOne(product, company);
+
+        }, ProductCreateFailureException::new);
+    }
+
+    public Product updateProduct(ProductForUpdate productForUpdate, Long updatedBy) {
+        return handleException(() -> {
+
+            Company company = companyService.validateAndGetSupplierCompany(updatedBy);
+            Product product = productQueryOutputPort.findById(productForUpdate.getId())
+                .orElseThrow(() -> new ProductLogicException("유효하지 않은 상품 식별자"));
+
+            product = product.updateFrom(productForUpdate, company);
+            return productOutputPort.update(product, updatedBy);
+
+        }, ProductUpdateFailureException::new);
+    }
+
+    public Product changeProductQuantity(ProductForUpdateQuantity productForUpdate, Long updatedBy) {
+        return handleException(() -> {
+
+            Company company = companyService.validateAndGetSupplierCompany(updatedBy);
+            Product product = productQueryOutputPort.findById(productForUpdate.getId())
+                .orElseThrow(() -> new ProductLogicException("유효하지 않은 상품 식별자"));
+            product.validateMatchedCompany(company);
+
+            return productOutputPort.changeProductQuantity(productForUpdate, updatedBy);
+
+        }, ProductUpdateFailureException::new);
     }
 }

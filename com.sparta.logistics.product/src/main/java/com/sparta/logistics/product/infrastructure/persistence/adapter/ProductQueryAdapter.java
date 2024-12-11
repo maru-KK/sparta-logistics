@@ -1,5 +1,6 @@
 package com.sparta.logistics.product.infrastructure.persistence.adapter;
 
+import com.sparta.logistics.product.application.outputport.ProductQueryOutputPort;
 import com.sparta.logistics.product.domain.Product;
 import com.sparta.logistics.product.infrastructure.persistence.entity.ProductEntity;
 import com.sparta.logistics.product.infrastructure.persistence.repository.ProductQueryDslRepository;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class ProductQueryAdapter {
+public class ProductQueryAdapter implements ProductQueryOutputPort {
 
     private final ProductQueryRepository productRepository;
     private final ProductQueryDslRepository productQueryDslRepository;
