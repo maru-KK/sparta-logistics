@@ -31,7 +31,20 @@ public record DeliveryPerson(
         return new DeliveryPerson(
                 entity.getDeliveryPersonId(),
                 entity.getDeliveryPersonId(),
-                entity.getHubId(),
+                null,
+                entity.getSnsId(),
+                entity.getType(),
+                entity.getStatus(),
+                entity.getSequence(),
+                entity.getCreatedAt(),
+                entity.getCreatedBy());
+    }
+
+    public static DeliveryPerson from(DeliveryPersonEntity entity, Long hubId) {
+        return new DeliveryPerson(
+                entity.getDeliveryPersonId(),
+                entity.getDeliveryPersonId(),
+                hubId,
                 entity.getSnsId(),
                 entity.getType(),
                 entity.getStatus(),

@@ -31,11 +31,32 @@ public class DeliveryPersonAdapter implements DeliveryPersonPort {
 
         validateUserRole(user);
 
-        hubPort.getHubById(requestDto.hubId());
+        validateDeliveryPersonExist(requestDto);
 
         DeliveryPersonEntity entity = deliveryPersonRepository.save(DeliveryPersonEntity.from(requestDto, user));
+        if (entity.getType().equals(COMPANY_DELIVERY)) {
+            return saveHubDeliveryPerson(requestDto, entity);
+        }
 
         return DeliveryPerson.from(entity);
+    }
+
+    private DeliveryPerson saveHubDeliveryPerson(DeliveryPerson requestDto, DeliveryPersonEntity entity) {
+        if (requestDto.hubId() == null) {
+            throw new IllegalArgumentException("업체 배송 담당자는 허브아이디가 필수 값입니다.");
+        }
+
+        hubCompanyPort.getHubById(requestDto.hubId());
+        HubDeliveryPersonEntity hubDeliveryPersonEntity = hubDeliveryPersonRepository.save(new HubDeliveryPersonEntity(entity.getDeliveryPersonId(), requestDto.hubId()));
+
+        return DeliveryPerson.from(entity, hubDeliveryPersonEntity.getHubId());
+    }
+
+    private void validateDeliveryPersonExist(DeliveryPerson requestDto) {
+        Optional<DeliveryPersonEntity> deliveryPerson = deliveryPersonRepository.findById(requestDto.userId());
+        if (deliveryPerson.isPresent()) {
+            throw new IllegalArgumentException("이미 배송 담당자로 지정 되어있습니다.");
+        }
     }
 
     @Override
@@ -52,8 +73,8 @@ public class DeliveryPersonAdapter implements DeliveryPersonPort {
     }
 
     private void validateUserRole(UserDetailResponse user) {
-        if (!user.role().equals("MASTER")) {
-            throw new IllegalArgumentException("배송 담당자 생성 권한이 없습니다.");
+        if (!user.role().equals("DELIVERY")) {
+            throw new IllegalArgumentException("배송 담당자로 지정될 수 없는 회원입니다.");
         }
     }
 }

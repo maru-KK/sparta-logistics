@@ -20,9 +20,6 @@ public class DeliveryPersonEntity extends BaseEntity {
     private Long deliveryPersonId;
 
     @Column(nullable = false)
-    private Long hubId;
-
-    @Column(nullable = false)
     private String snsId;
 
     @Enumerated(EnumType.STRING)
@@ -39,7 +36,6 @@ public class DeliveryPersonEntity extends BaseEntity {
     public static DeliveryPersonEntity from(DeliveryPerson request, UserDetailResponse user) {
         return DeliveryPersonEntity.builder()
                 .deliveryPersonId(user.userId())
-                .hubId(request.hubId())
                 .snsId(user.snsAccount())
                 .type(request.type())
                 .status(request.status())
