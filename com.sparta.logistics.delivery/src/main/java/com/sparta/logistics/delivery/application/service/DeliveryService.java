@@ -5,6 +5,7 @@ import com.sparta.logistics.delivery.application.output.DeliveryLogPort;
 import com.sparta.logistics.delivery.application.output.DeliveryPersonPort;
 import com.sparta.logistics.delivery.application.output.DeliveryPort;
 import com.sparta.logistics.delivery.domain.Delivery;
+import com.sparta.logistics.delivery.domain.DeliveryPerson;
 import com.sparta.logistics.delivery.infrastructure.external.auth.AuthPort;
 import com.sparta.logistics.delivery.infrastructure.external.hub.HubCompanyPort;
 import com.sparta.logistics.delivery.infrastructure.persistence.entity.DeliveryPersonEntity;
@@ -21,6 +22,7 @@ public class DeliveryService {
     private final DeliveryPersonRepository deliveryPersonRepository;
     private final AuthPort authPort;
     private final HubCompanyPort hubCompanyPort;
+    private final DeliveryPersonService deliveryPersonService;
 
     public Delivery createDelivery(DeliveryCreateRequestDto requestDto) {
 //        CompanyResponse supplyCompany = hubCompanyPort.getCompanyById(requestDto.supplyCompanyId());
@@ -32,7 +34,9 @@ public class DeliveryService {
 //        HubInfoResponseDto hubInfoResponseDto = hubClient.findByHubRoute(supplyCompanyInfo.hubId(), consumeCompanyInfo.hubId());
 
         // 허브 배송 담당자 배정
-        DeliveryPersonEntity nextDeliveryPerson = deliveryPersonPort.getNextHubDeliveryPerson();
+        DeliveryPerson nextHubDeliveryPerson = deliveryPersonService.getNextHubDeliveryPerson();
+        // 업체 배송 담당자 지정
+        DeliveryPerson nextCompanyDeliveryPerson = deliveryPersonService.getNextCompanyDeliveryPerson(1L);
 
 //        Delivery delivery = deliveryPort.save(requestDto, userInfo);
         //        배송 경로 기록 (p_delivery_log) 저장

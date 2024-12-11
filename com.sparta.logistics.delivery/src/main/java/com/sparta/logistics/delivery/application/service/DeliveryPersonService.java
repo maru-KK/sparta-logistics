@@ -3,6 +3,7 @@ package com.sparta.logistics.delivery.application.service;
 import com.sparta.logistics.delivery.application.dto.DeliveryPersonResponse;
 import com.sparta.logistics.delivery.application.output.DeliveryPersonPort;
 import com.sparta.logistics.delivery.domain.DeliveryPerson;
+import com.sparta.logistics.delivery.infrastructure.persistence.entity.DeliveryPersonEntity;
 import com.sparta.logistics.delivery.presentation.dto.DeliveryPersonCreateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,5 +32,17 @@ public class DeliveryPersonService {
         Page<DeliveryPerson> deliveryPersonList = deliveryPersonPort.getDeliveryPersonList(pageable);
 
         return deliveryPersonList.map(DeliveryPersonResponse::from);
+    }
+
+    public DeliveryPerson getNextHubDeliveryPerson() {
+        DeliveryPersonEntity nextHubDeliveryPerson = deliveryPersonPort.getNextHubDeliveryPerson();
+
+        return DeliveryPerson.from(nextHubDeliveryPerson);
+    }
+
+    public DeliveryPerson getNextCompanyDeliveryPerson(Long hubId) {
+        DeliveryPersonEntity nextCompanyDeliveryPerson = deliveryPersonPort.getNextCompanyDeliveryPerson(hubId);
+
+        return DeliveryPerson.from(nextCompanyDeliveryPerson);
     }
 }

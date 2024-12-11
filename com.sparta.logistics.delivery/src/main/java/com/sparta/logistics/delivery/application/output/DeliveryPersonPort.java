@@ -14,4 +14,6 @@ public interface DeliveryPersonPort {
     Page<DeliveryPerson> getDeliveryPersonList(Pageable pageable);
 
     DeliveryPersonEntity getNextHubDeliveryPerson();
+
+    DeliveryPersonEntity getNextCompanyDeliveryPerson(Long hubId);
 }
