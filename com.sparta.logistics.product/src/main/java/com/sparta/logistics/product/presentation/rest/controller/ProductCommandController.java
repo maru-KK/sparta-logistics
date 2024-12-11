@@ -71,16 +71,14 @@ public class ProductCommandController {
     @PatchMapping("/{productId}/quantity")
     public ResponseEntity<Success<Response>> changeProductQuantity(
         @PathVariable("productId") Long productId,
-        @RequestBody ProductQuantityModification.Request request,
-        @LoginActor Actor actor
+        @RequestBody ProductQuantityModification.Request request
     ) {
-        if (!Objects.equals(request.getProductId(), productId) ||
-            !Objects.equals(actor.role(), Role.COMPANY)) {
+        if (!Objects.equals(request.getProductId(), productId)) {
             throw new IllegalArgumentException("비정상적인 접근");
         }
 
         ProductForUpdateQuantity productForUpdate = request.toDomain();
-        Product product = productService.changeProductQuantity(productForUpdate, actor.userId());
+        Product product = productService.changeProductQuantity(productForUpdate, request.getUserId());
 
         Response response = ProductQuantityModification.Response.from(product);
         return ApiResponse.success(response, HttpStatus.OK);

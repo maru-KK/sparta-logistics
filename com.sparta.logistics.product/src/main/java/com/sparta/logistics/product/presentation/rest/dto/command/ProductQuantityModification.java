@@ -18,6 +18,7 @@ public class ProductQuantityModification {
         private Long productId;
         private Integer changedCount;
         private Boolean isDecrease;
+        private Long userId;
 
         public ProductForUpdateQuantity toDomain() {
             return new ProductForUpdateQuantity(productId, Quantity.valueOf(changedCount), isDecrease);
