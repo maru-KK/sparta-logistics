@@ -1,5 +1,6 @@
 package com.sparta.logistics.delivery.domain;
 
+import com.sparta.logistics.delivery.domain.vo.DeliveryPersonStatus;
 import com.sparta.logistics.delivery.domain.vo.DeliveryPersonType;
 import com.sparta.logistics.delivery.infrastructure.persistence.entity.DeliveryPersonEntity;
 import com.sparta.logistics.delivery.presentation.dto.DeliveryPersonCreateRequestDto;
@@ -12,26 +13,28 @@ public record DeliveryPerson(
         Long hubId,
         String snsId,
         DeliveryPersonType type,
+        DeliveryPersonStatus status,
         Integer sequence,
         LocalDateTime createdAt,
         String createdBy
 ) {
 
-    public DeliveryPerson(Long userId, Long hubId, DeliveryPersonType type, Integer sequence) {
-        this(null, userId, hubId, null, type, sequence, null, null);
+    public DeliveryPerson(Long userId, Long hubId, DeliveryPersonType type, DeliveryPersonStatus status, Integer sequence) {
+        this(null, userId, hubId, null, type, status, sequence, null, null);
     }
 
     public static DeliveryPerson from(DeliveryPersonCreateRequestDto dto) {
-        return new DeliveryPerson(dto.userId(), dto.hubId(), dto.type(), dto.sequence());
+        return new DeliveryPerson(dto.userId(), dto.hubId(), dto.type(), dto.status(), dto.sequence());
     }
 
     public static DeliveryPerson from(DeliveryPersonEntity entity) {
         return new DeliveryPerson(
                 entity.getDeliveryPersonId(),
-                entity.getUserId(),
+                entity.getDeliveryPersonId(),
                 entity.getHubId(),
                 entity.getSnsId(),
                 entity.getType(),
+                entity.getStatus(),
                 entity.getSequence(),
                 entity.getCreatedAt(),
                 entity.getCreatedBy());
