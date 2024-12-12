@@ -38,9 +38,14 @@ public class DeliveryService {
         // 업체 배송 담당자 지정
         DeliveryPerson nextCompanyDeliveryPerson = deliveryPersonService.getNextCompanyDeliveryPerson(1L);
 
-//        Delivery delivery = deliveryPort.save(requestDto, userInfo);
-        //        배송 경로 기록 (p_delivery_log) 저장
-//        deliveryPort.save(entity);
+        Delivery delivery = deliveryPort.save(requestDto, userInfo);
+
+
+        // 출발 도착 허브 아이디 요청해서 허브루트 정보 받기
+        HubRouteResponseDto hubInfoResponseDto = hubRoutePort.getRouteByOriginAndDestination(1L, 17L);
+
+//                배송 경로 기록 (p_delivery_log) 저장
+//        deliveryLogPort.
         return null;
     }
 }

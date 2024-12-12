@@ -7,10 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "hub-service")
+@FeignClient(name = "hub-company-service")
 public interface HubCompanyClient {
     @GetMapping("/api/v1/hubs/{hubId}")
-    ResponseEntity<HubResponseDto> getHubById(@PathVariable Long hubId);
+    ResponseEntity<HubResponseDto> getHubById(@PathVariable("hubId") Long hubId);
 
     @GetMapping("/api/v1/company/{companyId}")
     CompanyResponse getCompanyById(@PathVariable Long companyId);
