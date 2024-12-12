@@ -5,6 +5,7 @@ import com.sparta.logistics.hubcompany.application.dto.CompanyResponseDto;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.entity.CompanyEntity;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.entity.HubEntity;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.repository.CompanyRepository;
+import com.sparta.logistics.hubcompany.presentation.exception.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,5 +33,11 @@ public class CompanyServiceImpl implements CompanyService {
         CompanyEntity savedCompany = companyRepository.save(companyEntity);
 
         return new CompanyResponseDto(savedCompany);
+    }
+
+    @Override
+    public CompanyEntity getCompanyById(Long companyId) {
+        return companyRepository.findById(companyId)
+                .orElseThrow(() -> new ResourceNotFoundException("업체를 찾을 수 없습니다: " + companyId));
     }
 }
