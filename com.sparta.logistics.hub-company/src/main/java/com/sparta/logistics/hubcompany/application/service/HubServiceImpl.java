@@ -18,10 +18,9 @@ public class HubServiceImpl implements HubService {
     private final HubRepository hubRepository;
 
     @Override
-    public HubResponseDto getHubById(Long hubId) {
-        HubEntity hub = hubRepository.findById(hubId)
+    public HubEntity getHubById(Long hubId) {
+        return hubRepository.findById(hubId)
                 .orElseThrow(() -> new ResourceNotFoundException("허브를 찾을 수 없습니다: " + hubId));
-        return new HubResponseDto(hub);
     }
 
     @Override
@@ -46,4 +45,5 @@ public class HubServiceImpl implements HubService {
 
         return new HubResponseDto(savedHub);
     }
+
 }

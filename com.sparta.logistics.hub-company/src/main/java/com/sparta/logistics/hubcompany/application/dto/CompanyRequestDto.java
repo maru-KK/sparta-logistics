@@ -4,15 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HubCreationRequestDto {
+public class CompanyRequestDto {
     private String name;
+    private String type;
     private String address;
-    private BigDecimal latitude;
-    private BigDecimal longitude;
+    private Long hubId;
     private Long userId;
 }

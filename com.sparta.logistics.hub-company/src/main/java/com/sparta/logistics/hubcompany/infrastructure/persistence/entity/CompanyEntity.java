@@ -1,10 +1,10 @@
 package com.sparta.logistics.hubcompany.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
@@ -28,8 +28,11 @@ public class CompanyEntity extends Timestamped {
     private String address;
 
     @ManyToOne
-    @JoinColumn(name = "hub_id", insertable = false, updatable = false)
-    private HubEntity hubId;
+    @JoinColumn(name = "hub_id", nullable = false)
+    private HubEntity hub;
+
+    @Column(name = "hub_id", insertable = false, updatable = false)
+    private Long hubId;
 
     @Column(name = "user_id", nullable = false)
     private Long userId;
