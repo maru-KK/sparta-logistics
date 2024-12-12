@@ -13,5 +13,5 @@ public interface HubCompanyClient {
     ResponseEntity<HubResponseDto> getHubById(@PathVariable("hubId") Long hubId);
 
     @GetMapping("/api/v1/company/{companyId}")
-    CompanyResponse getCompanyById(@PathVariable Long companyId);
+    CompanyResponse getCompanyById(@PathVariable("companyId") Long companyId);
 }
