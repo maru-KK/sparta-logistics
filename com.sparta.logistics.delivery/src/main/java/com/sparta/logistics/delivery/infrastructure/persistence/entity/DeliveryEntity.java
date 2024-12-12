@@ -2,7 +2,7 @@ package com.sparta.logistics.delivery.infrastructure.persistence.entity;
 
 import com.sparta.logistics.delivery.application.dto.DeliveryCreateRequestDto;
 import com.sparta.logistics.delivery.domain.vo.DeliveryStatus;
-import com.sparta.logistics.delivery.infrastructure.external.hub.dto.CompanyResponse;
+import com.sparta.logistics.delivery.infrastructure.external.hubCompany.dto.CompanyResponse;
 import com.sparta.logistics.delivery.infrastructure.external.auth.dto.UserDetailResponse;
 import jakarta.persistence.*;
 import lombok.*;
@@ -49,8 +49,8 @@ public class DeliveryEntity extends BaseEntity {
                 .recipientName(userInfo.username())
                 .recipientSnsId(userInfo.snsAccount())
                 .orderId(requestDto.orderId())
-                .originHubId(supplyCompany.hubId())
-                .destinationHubId(consumeCompany.hubId())
+                .originHubId(supplyCompany.hub().getHubId())
+                .destinationHubId(consumeCompany.hub().getHubId())
                 .build();
     }
 }

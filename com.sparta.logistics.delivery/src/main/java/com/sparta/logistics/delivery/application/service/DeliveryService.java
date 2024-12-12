@@ -7,8 +7,9 @@ import com.sparta.logistics.delivery.domain.Delivery;
 import com.sparta.logistics.delivery.domain.DeliveryPerson;
 import com.sparta.logistics.delivery.infrastructure.external.auth.AuthPort;
 import com.sparta.logistics.delivery.infrastructure.external.auth.dto.UserDetailResponse;
-import com.sparta.logistics.delivery.infrastructure.external.hub.HubCompanyPort;
-import com.sparta.logistics.delivery.infrastructure.external.hub.dto.HubRouteResponseDto;
+import com.sparta.logistics.delivery.infrastructure.external.hubCompany.HubCompanyPort;
+import com.sparta.logistics.delivery.infrastructure.external.hubCompany.dto.CompanyResponse;
+import com.sparta.logistics.delivery.infrastructure.external.hubCompany.dto.HubRouteResponseDto;
 import com.sparta.logistics.delivery.infrastructure.external.hubRoute.HubRoutePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,18 +27,22 @@ public class DeliveryService {
 
     @Transactional
     public Delivery createDelivery(DeliveryCreateRequestDto requestDto) {
-//        CompanyResponse supplyCompany = hubCompanyPort.getCompanyById(requestDto.supplyCompanyId());
-//        CompanyResponse consumeCompany = hubCompanyPort.getCompanyById(requestDto.consumeCompanyId());
+
+        CompanyResponse supplyCompany = hubCompanyPort.getCompanyById(requestDto.supplyCompanyId());
+        CompanyResponse consumeCompany = hubCompanyPort.getCompanyById(requestDto.consumeCompanyId());
 
         // 허브 배송 담당자 배정
         DeliveryPerson nextHubDeliveryPerson = deliveryPersonService.getNextHubDeliveryPerson();
         // 업체 배송 담당자 지정
-        DeliveryPerson nextCompanyDeliveryPerson = deliveryPersonService.getNextCompanyDeliveryPerson(1L);
+        DeliveryPerson nextCompanyDeliveryPerson = deliveryPersonService.getNextCompanyDeliveryPerson(consumeCompany.hub().getHubId());
 
-        UserDetailResponse userInfo = authPort.findUser(1L);
-        Delivery delivery = deliveryPort.save(requestDto, userInfo);
+        // 수령인 정보 조회
+        UserDetailResponse userInfo = authPort.findUser(consumeCompany.userId());
 
-        HubRouteResponseDto hubRouteInfo = hubRoutePort.getRouteByOriginAndDestination(1L, 17L);
+        Delivery delivery = deliveryPort.save(requestDto, userInfo, supplyCompany, consumeCompany);
+
+        // 허브 루트 정보 조회
+        HubRouteResponseDto hubRouteInfo = hubRoutePort.getRouteByOriginAndDestination(supplyCompany.hub().getHubId(), consumeCompany.hub().getHubId());
         deliveryLogPort.save(delivery, hubRouteInfo, nextHubDeliveryPerson);
 
         return delivery;

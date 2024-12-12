@@ -1,6 +1,6 @@
 package com.sparta.logistics.delivery.infrastructure.external.hubRoute;
 
-import com.sparta.logistics.delivery.infrastructure.external.hub.dto.HubRouteResponseDto;
+import com.sparta.logistics.delivery.infrastructure.external.hubCompany.dto.HubRouteResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

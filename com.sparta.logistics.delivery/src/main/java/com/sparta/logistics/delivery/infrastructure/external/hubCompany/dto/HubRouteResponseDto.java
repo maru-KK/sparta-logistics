@@ -1,4 +1,4 @@
-package com.sparta.logistics.delivery.infrastructure.external.hub.dto;
+package com.sparta.logistics.delivery.infrastructure.external.hubCompany.dto;
 
 public record HubRouteResponseDto(
         Long hubRouteId,

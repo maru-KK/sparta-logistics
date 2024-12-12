@@ -3,7 +3,7 @@ package com.sparta.logistics.delivery.infrastructure.persistence.entity;
 import com.sparta.logistics.delivery.domain.Delivery;
 import com.sparta.logistics.delivery.domain.DeliveryPerson;
 import com.sparta.logistics.delivery.domain.vo.DeliveryLogStatus;
-import com.sparta.logistics.delivery.infrastructure.external.hub.dto.HubRouteResponseDto;
+import com.sparta.logistics.delivery.infrastructure.external.hubCompany.dto.HubRouteResponseDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;

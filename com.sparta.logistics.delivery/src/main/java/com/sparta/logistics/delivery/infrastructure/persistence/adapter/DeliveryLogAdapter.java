@@ -3,7 +3,7 @@ package com.sparta.logistics.delivery.infrastructure.persistence.adapter;
 import com.sparta.logistics.delivery.application.output.DeliveryLogPort;
 import com.sparta.logistics.delivery.domain.Delivery;
 import com.sparta.logistics.delivery.domain.DeliveryPerson;
-import com.sparta.logistics.delivery.infrastructure.external.hub.dto.HubRouteResponseDto;
+import com.sparta.logistics.delivery.infrastructure.external.hubCompany.dto.HubRouteResponseDto;
 import com.sparta.logistics.delivery.infrastructure.persistence.entity.DeliveryLogEntity;
 import com.sparta.logistics.delivery.infrastructure.persistence.repository.DeliveryLogRepository;
 import lombok.RequiredArgsConstructor;

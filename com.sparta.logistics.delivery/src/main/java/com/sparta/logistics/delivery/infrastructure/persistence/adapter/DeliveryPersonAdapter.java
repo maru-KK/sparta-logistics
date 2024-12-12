@@ -4,7 +4,7 @@ import com.sparta.logistics.delivery.application.output.DeliveryPersonPort;
 import com.sparta.logistics.delivery.domain.DeliveryPerson;
 import com.sparta.logistics.delivery.infrastructure.external.auth.AuthPort;
 import com.sparta.logistics.delivery.infrastructure.external.auth.dto.UserDetailResponse;
-import com.sparta.logistics.delivery.infrastructure.external.hub.HubCompanyPort;
+import com.sparta.logistics.delivery.infrastructure.external.hubCompany.HubCompanyPort;
 import com.sparta.logistics.delivery.infrastructure.persistence.entity.DeliveryPersonEntity;
 import com.sparta.logistics.delivery.infrastructure.persistence.entity.HubDeliveryPersonEntity;
 import com.sparta.logistics.delivery.infrastructure.persistence.repository.DeliveryPersonRepository;
