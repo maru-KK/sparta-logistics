@@ -31,9 +31,6 @@ public class CompanyEntity extends Timestamped {
     @JoinColumn(name = "hub_id", nullable = false)
     private HubEntity hub;
 
-    @Column(name = "hub_id", insertable = false, updatable = false)
-    private Long hubId;
-
     @Column(name = "user_id", nullable = false)
     private Long userId;
 

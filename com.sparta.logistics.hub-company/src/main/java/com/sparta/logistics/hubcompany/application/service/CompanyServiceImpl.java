@@ -2,6 +2,7 @@ package com.sparta.logistics.hubcompany.application.service;
 
 import com.sparta.logistics.hubcompany.application.dto.CompanyRequestDto;
 import com.sparta.logistics.hubcompany.application.dto.CompanyResponseDto;
+import com.sparta.logistics.hubcompany.application.dto.HubResponseDto;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.entity.CompanyEntity;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.entity.HubEntity;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.repository.CompanyRepository;
@@ -39,5 +40,15 @@ public class CompanyServiceImpl implements CompanyService {
     public CompanyEntity getCompanyById(Long companyId) {
         return companyRepository.findById(companyId)
                 .orElseThrow(() -> new ResourceNotFoundException("업체를 찾을 수 없습니다: " + companyId));
+    }
+
+    @Override
+    public HubResponseDto getHubByCompanyId(Long companyId){
+        CompanyEntity company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new ResourceNotFoundException("업체를 찾을 수 없습니다: " + companyId));
+
+        HubEntity hub = company.getHub();
+
+        return new HubResponseDto(hub);
     }
 }
