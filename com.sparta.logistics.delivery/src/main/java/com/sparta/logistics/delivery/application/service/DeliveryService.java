@@ -41,8 +41,7 @@ public class DeliveryService {
         Delivery delivery = deliveryPort.save(requestDto, userInfo);
 
 
-        // 출발 도착 허브 아이디 요청해서 허브루트 정보 받기
-        HubRouteResponseDto hubInfoResponseDto = hubRoutePort.getRouteByOriginAndDestination(1L, 17L);
+        deliveryLogPort.save(delivery, hubRouteInfo, nextHubDeliveryPerson);
 
 //                배송 경로 기록 (p_delivery_log) 저장
 //        deliveryLogPort.
