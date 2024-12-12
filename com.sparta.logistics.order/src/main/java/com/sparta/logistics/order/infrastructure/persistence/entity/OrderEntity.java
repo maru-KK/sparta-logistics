@@ -3,6 +3,8 @@ package com.sparta.logistics.order.infrastructure.persistence.entity;
 import com.sparta.logistics.order.domain.order.Order;
 import com.sparta.logistics.order.domain.order.OrderForCreate;
 import com.sparta.logistics.order.domain.order.Product;
+import com.sparta.logistics.order.domain.order.vo.OrderProduct;
+import com.sparta.logistics.order.domain.order.vo.OrderStatus;
 import com.sparta.logistics.order.infrastructure.persistence.entity.vo.OrderEntityStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -71,6 +73,13 @@ public class OrderEntity extends BaseEntity {
         return new Order(
             orderId, orderedBy, consumeCompanyId, supplyCompanyId,
             productId, quantity, requestMessage, deliveryLimitedAt, status.toDomain()
+        );
+    }
+
+    public OrderProduct toOrderProduct(Product product) {
+        return new OrderProduct(
+            orderId, orderedBy, consumeCompanyId, product, quantity,
+            requestMessage, deliveryLimitedAt, OrderStatus.valueOf(status.name())
         );
     }
 }

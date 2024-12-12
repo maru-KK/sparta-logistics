@@ -85,4 +85,10 @@ public class OrderQueryRepository {
         }
         return orderSpecifiers;
     }
+
+    public Optional<OrderEntity> findOne(Long orderId) {
+        return Optional.ofNullable(queryFactory.selectFrom(orderEntity)
+            .where(orderEntity.orderId.eq(orderId), orderEntity.isDeleted.isFalse())
+            .fetchOne());
+    }
 }

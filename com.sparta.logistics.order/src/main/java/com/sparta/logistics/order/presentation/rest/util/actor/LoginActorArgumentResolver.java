@@ -47,7 +47,7 @@ public class LoginActorArgumentResolver implements HandlerMethodArgumentResolver
             return Role.valueOf(role);
 
         // if role mismatch
-        } catch (IllegalArgumentException exception) {
+        } catch (Exception exception) {
             throw new InvalidAccessResourceException("비정상적인 유저 접근");
         }
     }

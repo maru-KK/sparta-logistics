@@ -1,8 +1,8 @@
-package com.sparta.logistics.product.presentation.rest.exception.exceptions;
+package com.sparta.logistics.order.presentation.rest.exception.exceptions;
 
-public class DataNotFoundException extends RuntimeException {
+public class ResourceNotFoundException extends RuntimeException {
 
-    public DataNotFoundException(String message) {
+    public ResourceNotFoundException(String message) {
         super(message);
     }
 }
