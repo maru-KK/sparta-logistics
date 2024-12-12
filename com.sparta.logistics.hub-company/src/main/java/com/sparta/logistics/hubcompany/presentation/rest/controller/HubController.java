@@ -19,8 +19,8 @@ public class HubController {
     private final HubService hubService;
 
     @GetMapping("/{hubId}")
-    public ResponseEntity<HubResponseDto> getHubById(@PathVariable("hubId") Long hubId) {
-        HubResponseDto hub = hubService.getHubById(hubId);
+    public ResponseEntity<HubEntity> getHubById(@PathVariable("hubId") Long hubId) {
+        HubEntity hub = hubService.getHubById(hubId);
         return ResponseEntity.ok(hub);
     }
 
@@ -34,9 +34,9 @@ public class HubController {
     public ResponseEntity<String> createHub(@RequestBody HubCreationRequestDto request,
                                             @RequestHeader("X-User-Id") Long userId,
                                             @RequestHeader("X-Role") String role) {
-        if (!"HUB".equals(role)) {
+        if (!"HUB".equals(role) && !"MASTER".equals(role)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("해당 사용자는 허브 관리자로 지정할 수 없습니다.");
+                    .body("허브 생성 권한이 없습니다.");
         }
 
         HubResponseDto hubResponse = hubService.createHub(request, userId);
