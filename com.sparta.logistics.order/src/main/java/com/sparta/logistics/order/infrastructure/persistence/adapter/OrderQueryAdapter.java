@@ -1,6 +1,6 @@
-package com.sparta.logistics.order.infrastructure.persistence.repository;
+package com.sparta.logistics.order.infrastructure.persistence.adapter;
 
-import static com.sparta.logistics.order.infrastructure.persistence.entity.QOrderEntity.orderEntity;
+import static com.sparta.logistics.order.infrastructure.persistence.entity.QOrderEntity.*;
 
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -22,13 +22,13 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class OrderQueryRepository {
+public class OrderPersistenceQueryAdapter {
 
     private final JPAQueryFactory queryFactory;
 
-    public Page<OrderEntity> findAll(OrderSearchCondition searchCondition, Long orderedBy) {
+    public Page<OrderEntity> findAll(OrderSearchCondition searchCondition) {
 
-        BooleanExpression searchExpression = getSearchCondition(searchCondition, orderedBy);
+        BooleanExpression searchExpression = getSearchCondition(searchCondition);
 
         List<OrderEntity> contents = queryFactory
             .selectFrom(orderEntity)
@@ -49,9 +49,8 @@ public class OrderQueryRepository {
         return new PageImpl<>(contents, pageRequest, total);
     }
 
-    private BooleanExpression getSearchCondition(OrderSearchCondition searchCondition, Long orderedBy) {
+    private BooleanExpression getSearchCondition(OrderSearchCondition searchCondition) {
         return orderEntity.isDeleted.isFalse()
-            .and(orderEntity.orderedBy.eq(orderedBy))
             .and(isSupplyCompanyIdEqual(searchCondition.getSupplyCompanyId()))
             .and(isProductIdEqual(searchCondition.getProductId()))
             .and(isStatusEqual(searchCondition.getStatus()));
@@ -77,10 +76,8 @@ public class OrderQueryRepository {
 
             if ("created_at".equalsIgnoreCase(sortType)) {
                 orderSpecifiers.add(new OrderSpecifier<>(isAsc ? Order.ASC : Order.DESC, orderEntity.orderId));
-            } else if ("product_id".equalsIgnoreCase(sortType)) {
-                orderSpecifiers.add(new OrderSpecifier<>(isAsc ? Order.ASC : Order.DESC, orderEntity.productId));
-            } else if ("quantity".equalsIgnoreCase(sortType)) {
-                orderSpecifiers.add(new OrderSpecifier<>(isAsc ? Order.ASC : Order.DESC, orderEntity.quantity));
+            } else if ("name".equalsIgnoreCase(sortType)) {
+                orderSpecifiers.add(new OrderSpecifier<>(isAsc ? Order.ASC : Order.DESC, productEntity.name));
             }
         }
         return orderSpecifiers;

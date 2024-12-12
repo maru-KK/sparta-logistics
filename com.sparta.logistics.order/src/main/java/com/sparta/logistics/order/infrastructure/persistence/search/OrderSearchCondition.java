@@ -1,7 +1,8 @@
 package com.sparta.logistics.order.infrastructure.persistence.search;
 
 
-import com.sparta.logistics.order.domain.order.vo.OrderStatus;
+
+import com.sparta.logistics.order.infrastructure.persistence.entity.vo.OrderEntityStatus;
 import com.sparta.logistics.order.infrastructure.persistence.search.sort.OrderSort;
 import com.sparta.logistics.order.infrastructure.persistence.search.sort.Sort;
 import java.util.List;
@@ -29,7 +30,7 @@ public class OrderSearchCondition {
     // filter option
     private final Long supplyCompanyId;
     private final Long productId;
-    private final OrderStatus status;
+    private final OrderEntityStatus status;
 
     public static OrderSearchCondition of(
         String requestPage, String requestSize, String requestSort,
@@ -42,7 +43,7 @@ public class OrderSearchCondition {
 
         Long supplyCompanyId = parseLongOrNull(requestSupplyCompanyId);
         Long consumeCompanyId = parseLongOrNull(requestProductId);
-        OrderStatus status = OrderStatus.of(requestStatus);
+        OrderEntityStatus status = OrderEntityStatus.of(requestStatus);
 
         return new OrderSearchCondition(
             page, size, sort,
