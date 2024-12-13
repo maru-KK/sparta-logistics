@@ -45,5 +45,5 @@ public class HubServiceImpl implements HubService {
 
         return new HubResponseDto(savedHub);
     }
-  
+
 }
