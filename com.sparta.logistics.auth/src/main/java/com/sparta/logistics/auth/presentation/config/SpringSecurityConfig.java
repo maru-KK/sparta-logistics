@@ -26,9 +26,9 @@ public class SpringSecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
 
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/auth/sign-in").permitAll()
-                .requestMatchers("/auth/sign-up").permitAll()
-                .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/api/v1/auth/sign-in").permitAll()
+                .requestMatchers("/api/v1/auth/sign-up").permitAll()
+                .requestMatchers("/api/v1/auth/**").permitAll()
                 .anyRequest().authenticated())
 
             .sessionManagement(session -> session

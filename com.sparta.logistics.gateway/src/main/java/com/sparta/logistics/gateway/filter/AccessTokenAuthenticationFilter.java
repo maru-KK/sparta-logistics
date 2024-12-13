@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.core.Ordered;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -16,12 +17,13 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class AccessTokenAuthenticationFilter implements GlobalFilter {
+public class AccessTokenAuthenticationFilter implements GlobalFilter, Ordered {
 
-    private static final List<String> publicPaths = List.of("/auth/sign-in", "/auth/sign-up");
-    private static final String HEADER_AUTHORIZATION = "Authorization";
-    private static final String HEADER_USER_ID = "X-User-Id";
-    private static final String HEADER_ROLE = "X-Role";
+    public static final int AUTHENTICATION_FILTER_ORDER = 100;
+    public static final List<String> publicPaths = List.of("/api/v1/auth/sign-in", "/api/v1/auth/sign-up");
+    public static final String HEADER_AUTHORIZATION = "Authorization";
+    public static final String HEADER_USER_ID = "X-User-Id";
+    public static final String HEADER_ROLE = "X-Role";
 
     private final AccessTokenProvider tokenProvider;
 
@@ -57,5 +59,10 @@ public class AccessTokenAuthenticationFilter implements GlobalFilter {
             .build();
 
         return chain.filter(mutatedExchange);
+    }
+
+    @Override
+    public int getOrder() {
+        return AUTHENTICATION_FILTER_ORDER;
     }
 }
