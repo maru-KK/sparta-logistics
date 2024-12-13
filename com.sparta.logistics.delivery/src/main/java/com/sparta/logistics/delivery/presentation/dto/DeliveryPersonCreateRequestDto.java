@@ -12,9 +12,8 @@ public record DeliveryPersonCreateRequestDto(
         @NotNull(message = "type은 필수 입력값입니다.")
         DeliveryPersonType type,
         @NotNull(message = "status는 필수 입력값입니다.")
-        DeliveryPersonStatus status,
-        @NotNull(message = "sequence는 null일 수 없습니다.")
-        Integer sequence
+        DeliveryPersonStatus status
+
 ) {
 
 }

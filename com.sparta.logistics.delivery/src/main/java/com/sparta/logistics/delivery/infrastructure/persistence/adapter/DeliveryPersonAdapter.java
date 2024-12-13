@@ -2,7 +2,6 @@ package com.sparta.logistics.delivery.infrastructure.persistence.adapter;
 
 import com.sparta.logistics.delivery.application.output.DeliveryPersonPort;
 import com.sparta.logistics.delivery.domain.DeliveryPerson;
-import com.sparta.logistics.delivery.infrastructure.external.auth.AuthPort;
 import com.sparta.logistics.delivery.infrastructure.external.auth.dto.UserDetailResponse;
 import com.sparta.logistics.delivery.infrastructure.external.hubCompany.HubCompanyPort;
 import com.sparta.logistics.delivery.infrastructure.persistence.entity.DeliveryPersonEntity;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +29,6 @@ import static com.sparta.logistics.delivery.domain.vo.DeliveryPersonType.HUB_DEL
 @Slf4j
 public class DeliveryPersonAdapter implements DeliveryPersonPort {
     private final DeliveryPersonRepository deliveryPersonRepository;
-    private final AuthPort authPort;
     private final HubCompanyPort hubCompanyPort;
     private final RedisTemplate<String, Integer> redisTemplate;
     private final HubDeliveryPersonRepository hubDeliveryPersonRepository;
@@ -82,38 +79,16 @@ public class DeliveryPersonAdapter implements DeliveryPersonPort {
     }
 
     @Override
-    @Transactional
-    public DeliveryPerson createDeliveryPerson(DeliveryPerson requestDto) {
-        UserDetailResponse user = authPort.findUser(requestDto.userId());
+    public DeliveryPerson saveDeliveryPerson(DeliveryPerson deliveryPerson, UserDetailResponse user) {
+        validateDeliveryPersonExist(deliveryPerson);
 
-        validateUserRole(user);
-
-        validateDeliveryPersonExist(requestDto);
-
-        DeliveryPersonEntity entity = deliveryPersonRepository.save(DeliveryPersonEntity.from(requestDto, user));
-        if (entity.getType().equals(COMPANY_DELIVERY)) {
-            return saveHubDeliveryPerson(requestDto, entity);
+        if (deliveryPerson.type().equals(COMPANY_DELIVERY)) {
+            return saveCompanyDeliveryPerson(deliveryPerson, user);
         }
+
+        DeliveryPersonEntity entity = saveHubDeliveryPerson(deliveryPerson, user);
 
         return DeliveryPerson.from(entity);
-    }
-
-    private DeliveryPerson saveHubDeliveryPerson(DeliveryPerson requestDto, DeliveryPersonEntity entity) {
-        if (requestDto.hubId() == null) {
-            throw new IllegalArgumentException("업체 배송 담당자는 허브아이디가 필수 값입니다.");
-        }
-
-        hubCompanyPort.getHubById(requestDto.hubId());
-        HubDeliveryPersonEntity hubDeliveryPersonEntity = hubDeliveryPersonRepository.save(new HubDeliveryPersonEntity(entity.getDeliveryPersonId(), requestDto.hubId()));
-
-        return DeliveryPerson.from(entity, hubDeliveryPersonEntity.getHubId());
-    }
-
-    private void validateDeliveryPersonExist(DeliveryPerson requestDto) {
-        Optional<DeliveryPersonEntity> deliveryPerson = deliveryPersonRepository.findById(requestDto.userId());
-        if (deliveryPerson.isPresent()) {
-            throw new IllegalArgumentException("이미 배송 담당자로 지정 되어있습니다.");
-        }
     }
 
     @Override
@@ -129,9 +104,50 @@ public class DeliveryPersonAdapter implements DeliveryPersonPort {
         return deliveryPersonRepository.findAllByIsDeletedFalse(pageable).map(DeliveryPerson::from);
     }
 
-    private void validateUserRole(UserDetailResponse user) {
-        if (!user.role().equals("DELIVERY")) {
-            throw new IllegalArgumentException("배송 담당자로 지정될 수 없는 회원입니다.");
+    private DeliveryPersonEntity saveHubDeliveryPerson(DeliveryPerson deliveryPerson, UserDetailResponse user) {
+        int sequence = 1;
+
+        List<DeliveryPersonEntity> hubDeliveryPersonList = deliveryPersonRepository.findByHubDeliveryPerson(HUB_DELIVERY, AVAILABLE);
+        if (!hubDeliveryPersonList.isEmpty()) {
+            DeliveryPersonEntity deliveryPersonEntity = hubDeliveryPersonList.get(hubDeliveryPersonList.size() - 1);
+            sequence = deliveryPersonEntity.getSequence() + 1;
+        }
+
+        return deliveryPersonRepository.save(DeliveryPersonEntity.of(deliveryPerson, user, sequence));
+    }
+
+    private DeliveryPerson saveCompanyDeliveryPerson(DeliveryPerson deliveryPerson, UserDetailResponse user) {
+        int sequence = 1;
+
+        List<DeliveryPersonEntity> companyDeliveryPersonList = deliveryPersonRepository.findByCompanyDeliveryPerson(COMPANY_DELIVERY, AVAILABLE, deliveryPerson.hubId());
+
+        if (!companyDeliveryPersonList.isEmpty()) {
+            DeliveryPersonEntity deliveryPersonEntity = companyDeliveryPersonList.get(companyDeliveryPersonList.size() - 1);
+            sequence = deliveryPersonEntity.getSequence() + 1;
+        }
+
+        DeliveryPersonEntity entity = deliveryPersonRepository.save(DeliveryPersonEntity.of(deliveryPerson, user, sequence));
+
+        return saveHubDeliveryPerson(deliveryPerson, entity);
+    }
+
+    private DeliveryPerson saveHubDeliveryPerson(DeliveryPerson deliveryPerson, DeliveryPersonEntity entity) {
+        if (deliveryPerson.hubId() == null) {
+            throw new IllegalArgumentException("업체 배송 담당자는 허브아이디가 필수 값입니다.");
+        }
+
+        hubCompanyPort.getHubById(deliveryPerson.hubId());
+        HubDeliveryPersonEntity hubDeliveryPersonEntity = hubDeliveryPersonRepository.save(new HubDeliveryPersonEntity(entity.getDeliveryPersonId(), deliveryPerson.hubId()));
+
+        return DeliveryPerson.from(entity, hubDeliveryPersonEntity.getHubId());
+    }
+
+    private void validateDeliveryPersonExist(DeliveryPerson requestDto) {
+        Optional<DeliveryPersonEntity> deliveryPerson = deliveryPersonRepository.findById(requestDto.userId());
+        if (deliveryPerson.isPresent()) {
+            throw new IllegalArgumentException("이미 배송 담당자로 지정 되어있습니다.");
         }
     }
+
+
 }

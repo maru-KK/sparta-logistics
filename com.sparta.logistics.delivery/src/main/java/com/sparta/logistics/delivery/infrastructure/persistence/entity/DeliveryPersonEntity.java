@@ -33,13 +33,13 @@ public class DeliveryPersonEntity extends BaseEntity {
     @Column(nullable = false)
     private Integer sequence;
 
-    public static DeliveryPersonEntity from(DeliveryPerson request, UserDetailResponse user) {
+    public static DeliveryPersonEntity of(DeliveryPerson request, UserDetailResponse user, int sequence) {
         return DeliveryPersonEntity.builder()
                 .deliveryPersonId(user.userId())
                 .snsId(user.snsAccount())
                 .type(request.type())
                 .status(request.status())
-                .sequence(1)
+                .sequence(sequence)
                 .build();
     }
 }
