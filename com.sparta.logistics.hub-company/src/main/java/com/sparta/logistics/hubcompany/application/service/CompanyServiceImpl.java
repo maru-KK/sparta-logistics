@@ -2,6 +2,7 @@ package com.sparta.logistics.hubcompany.application.service;
 
 import com.sparta.logistics.hubcompany.application.dto.CompanyRequestDto;
 import com.sparta.logistics.hubcompany.application.dto.CompanyResponseDto;
+import com.sparta.logistics.hubcompany.application.dto.HubCompanyResponseDto;
 import com.sparta.logistics.hubcompany.application.dto.HubResponseDto;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.entity.CompanyEntity;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.entity.HubEntity;
@@ -10,6 +11,9 @@ import com.sparta.logistics.hubcompany.infrastructure.persistence.repository.Hub
 import com.sparta.logistics.hubcompany.presentation.exception.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -75,6 +79,19 @@ public class CompanyServiceImpl implements CompanyService {
                 .build();
 
         companyRepository.save(updatedCompany);
+    }
+
+    @Override
+    public List<HubCompanyResponseDto> getHubsAndCompaniesByUserId(Long userId) {
+        List<CompanyEntity> companies = companyRepository.findByUserId(userId);
+
+        return companies.stream()
+                .map(company -> {
+                    HubEntity hub = hubRepository.findById(company.getHub().getHubId())
+                            .orElseThrow(() -> new ResourceNotFoundException("허브를 찾을 수 없습니다: " + company.getHub().getHubId()));
+                    return new HubCompanyResponseDto(hub, company);
+                })
+                .collect(Collectors.toList());
     }
 
 }

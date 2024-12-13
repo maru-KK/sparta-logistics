@@ -2,6 +2,7 @@ package com.sparta.logistics.hubcompany.presentation.rest.controller;
 
 import com.sparta.logistics.hubcompany.application.dto.CompanyRequestDto;
 import com.sparta.logistics.hubcompany.application.dto.CompanyResponseDto;
+import com.sparta.logistics.hubcompany.application.dto.HubCompanyResponseDto;
 import com.sparta.logistics.hubcompany.application.dto.HubResponseDto;
 import com.sparta.logistics.hubcompany.application.service.CompanyService;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.entity.CompanyEntity;
@@ -9,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -57,6 +60,12 @@ public class CompanyController {
 
         companyService.updateCompany(companyId, request, userId);
         return ResponseEntity.ok("Company updated successfully.");
+    }
+
+    @GetMapping("/users/{user_id}")
+    public ResponseEntity<List<HubCompanyResponseDto>> getHubsAndCompaniesByUserId(@PathVariable("user_id") Long userId) {
+        List<HubCompanyResponseDto> response = companyService.getHubsAndCompaniesByUserId(userId);
+        return ResponseEntity.ok(response);
     }
 
 }
