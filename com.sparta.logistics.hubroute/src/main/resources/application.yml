@@ -1,34 +1,3 @@
 spring:
-  application:
-    name: hub-route-service
-  datasource:
-    url: jdbc:mysql://localhost:3306/logistics
-    username: root
-    password: "0000"
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    database-platform: org.hibernate.dialect.MySQL8Dialect
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
-        use_sql_comments: true
-
-service:
-    api:
-      key: "5b3ce3597851110001cf6248cc975e03a3204113bfb9c297b9055260"
-
-server:
-  port: 19040
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:19090/eureka/
-  instance:
-    hostname: localhost
-    prefer-ip-address: true
-    lease-renewal-interval-in-seconds: 30
-    lease-expiration-duration-in-seconds: 90
+  profiles:
+    active: dev
