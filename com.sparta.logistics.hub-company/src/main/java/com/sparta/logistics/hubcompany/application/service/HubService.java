@@ -4,7 +4,6 @@ import com.sparta.logistics.hubcompany.application.dto.HubCreationRequestDto;
 import com.sparta.logistics.hubcompany.application.dto.HubResponseDto;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.entity.HubEntity;
 
-
 import java.util.List;
 
 public interface HubService {

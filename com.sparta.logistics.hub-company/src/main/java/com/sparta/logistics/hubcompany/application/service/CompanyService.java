@@ -9,4 +9,5 @@ public interface CompanyService {
     CompanyResponseDto createCompany(CompanyRequestDto request, Long userId);
     CompanyEntity getCompanyById(Long companyId);
     HubResponseDto getHubByCompanyId(Long companyId);
+    void updateCompany(Long companyId, CompanyRequestDto request, Long userId);
 }

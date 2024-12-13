@@ -5,7 +5,6 @@ import com.sparta.logistics.hubcompany.application.dto.CompanyResponseDto;
 import com.sparta.logistics.hubcompany.application.dto.HubResponseDto;
 import com.sparta.logistics.hubcompany.application.service.CompanyService;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.entity.CompanyEntity;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +43,20 @@ public class CompanyController {
     public ResponseEntity<HubResponseDto> getHubByCompanyId(@PathVariable Long companyId) {
         HubResponseDto hubResponse = companyService.getHubByCompanyId(companyId);
         return ResponseEntity.ok(hubResponse);
+    }
+
+    @PatchMapping("/{companyId}")
+    public ResponseEntity<String> updateCompany(@PathVariable Long companyId,
+                                                @RequestBody CompanyRequestDto request,
+                                                @RequestHeader("X-User-Id") Long userId,
+                                                @RequestHeader("X-Role") String role) {
+        if (!"COMPANY".equals(role) && !"MASTER".equals(role)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("업체 수정 권한이 없습니다.");
+        }
+
+        companyService.updateCompany(companyId, request, userId);
+        return ResponseEntity.ok("Company updated successfully.");
     }
 
 }
