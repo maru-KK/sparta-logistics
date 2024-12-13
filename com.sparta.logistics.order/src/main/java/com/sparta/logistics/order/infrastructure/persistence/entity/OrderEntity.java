@@ -55,14 +55,13 @@ public class OrderEntity extends BaseEntity {
         this.status = status;
     }
 
-    public static OrderEntity from(OrderForCreate order) {
-        Product orderedProduct = order.getOrderedProduct();
+    public static OrderEntity from(OrderForCreate order, Product product) {
         return new OrderEntity(
-            order.getOrderedUser(),
+            order.getOrderedBy(),
             order.getOrderedCompany(),
-            orderedProduct.getSupplyCompany(),
-            orderedProduct.getId(),
-            orderedProduct.getQuantity(),
+            product.getSupplyCompany(),
+            product.getId(),
+            order.getOrderedQuantity(),
             order.getRequestMessage(),
             order.getDeliveryLimitedAt(),
             OrderEntityStatus.valueOf(order.getStatus().name())

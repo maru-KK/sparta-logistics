@@ -1,5 +1,6 @@
 package com.sparta.logistics.order.domain.order;
 
+import com.sparta.logistics.order.domain.event.OrderCreateEvent;
 import com.sparta.logistics.order.domain.order.vo.OrderStatus;
 import java.time.LocalDateTime;
 
@@ -32,6 +33,10 @@ public class Order {
         this.requestMessage = requestMessage;
         this.deliveryLimitedAt = deliveryLimitedAt;
         this.status = status;
+    }
+
+    public OrderCreateEvent createEvent() {
+        return new OrderCreateEvent(id, productId, quantity, orderedBy);
     }
 
     public Long getId() {
