@@ -11,7 +11,10 @@ import com.sparta.logistics.delivery.infrastructure.external.hubCompany.HubCompa
 import com.sparta.logistics.delivery.infrastructure.external.hubCompany.dto.CompanyResponse;
 import com.sparta.logistics.delivery.infrastructure.external.hubCompany.dto.HubRouteResponseDto;
 import com.sparta.logistics.delivery.infrastructure.external.hubRoute.HubRoutePort;
+import com.sparta.logistics.delivery.infrastructure.persistence.search.DeliverySearchCondition;
+import com.sparta.logistics.delivery.presentation.dto.DeliveryResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,5 +53,18 @@ public class DeliveryService {
         deliveryLogPort.save(delivery, hubRouteInfo, nextHubDeliveryPerson);
 
         return delivery;
+    }
+
+    public DeliveryResponseDto getDelivery(Long deliveryId) {
+        Delivery delivery = deliveryPort.findOne(deliveryId);
+
+        return DeliveryResponseDto.from(delivery);
+    }
+
+    public Page<DeliveryResponseDto> getDeliveryList(DeliverySearchCondition deliverySearchCondition) {
+        Page<Delivery> deliveryList = deliveryPort.getDeliveryList(deliverySearchCondition);
+
+        return deliveryList.map(DeliveryResponseDto::from);
+
     }
 }
