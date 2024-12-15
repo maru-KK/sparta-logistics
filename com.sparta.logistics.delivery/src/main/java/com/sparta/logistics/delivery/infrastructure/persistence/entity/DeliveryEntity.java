@@ -33,7 +33,7 @@ public class DeliveryEntity extends BaseEntity {
     @Column(name = "recipient_sns_id")
     private String recipientSnsId;
 
-    @Column(name = "order_id")
+    @Column(name = "order_id", unique = true)
     private Long orderId;
 
     @Column(name = "origin_hub_id")

@@ -9,4 +9,5 @@ public interface DeliveryPort {
     Delivery save(DeliveryCreateRequestDto requestDto, UserDetailResponse userInfo, CompanyResponse supplyCompany, CompanyResponse consumeCompany);
 
 
+    boolean existOrderId(Long orderId);
 }
