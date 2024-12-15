@@ -16,4 +16,6 @@ public interface DeliveryPort {
     Page<Delivery> getDeliveryList(DeliverySearchCondition deliverySearchCondition);
 
     boolean existOrderId(Long aLong);
+
+    Delivery update(Delivery updateRequestDto, Long userId);
 }

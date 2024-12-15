@@ -67,4 +67,11 @@ public class DeliveryService {
         return deliveryList.map(DeliveryResponseDto::from);
 
     }
+
+    @Transactional
+    public Delivery updateDelivery(Delivery delivery, Long userId) {
+        delivery.updateValidate();
+
+        return deliveryPort.update(delivery, userId);
+    }
 }

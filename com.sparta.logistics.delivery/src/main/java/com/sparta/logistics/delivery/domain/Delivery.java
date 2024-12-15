@@ -28,4 +28,21 @@ public record Delivery(
                 entity.getDestinationHubId(),
                 entity.getCreatedAt());
     }
+
+    public void updateValidate() {
+        if (deliveryAddress.trim().isEmpty()){
+            throw new IllegalArgumentException("배송 주소는 빈 값이 될 수 없습니다.");
+        }
+
+        if (recipientName != null && (recipientName.trim().isEmpty())) {
+            throw new IllegalArgumentException("수령인 이름은 빈 값이 될 수 없습니다.");
+        }
+        if (recipientSnsId != null && recipientSnsId.trim().isEmpty()) {
+            throw new IllegalArgumentException("수령인 SNS ID는 빈 값이 될 수 없습니다.");
+        }
+
+        if (originHubId.equals(destinationHubId)) {
+            throw new IllegalArgumentException("출발 허브와 도착 허브가 같을 수 없습니다.");
+        }
+    }
 }

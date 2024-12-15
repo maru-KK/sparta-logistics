@@ -35,6 +35,15 @@ public class DeliveryAdapter implements DeliveryPort {
     }
 
     @Override
+    public Delivery update(Delivery updateRequestDto, Long userId) {
+        DeliveryEntity deliveryEntity = deliveryRepository.findById(updateRequestDto.deliveryId()).orElseThrow(() -> new IllegalStateException("배송정보를 찾을 수 없습니다."));
+
+        deliveryEntity.update(updateRequestDto, userId);
+
+        return Delivery.from(deliveryEntity);
+    }
+
+    @Override
     public Delivery findOne(Long deliveryId) {
         DeliveryEntity deliveryEntity = deliveryRepository.findById(deliveryId).orElseThrow(() -> new IllegalStateException("배송정보를 찾을 수 없습니다."));
 

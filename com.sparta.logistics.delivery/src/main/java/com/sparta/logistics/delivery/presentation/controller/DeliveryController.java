@@ -1,9 +1,13 @@
 package com.sparta.logistics.delivery.presentation.controller;
 
 import com.sparta.logistics.delivery.application.dto.DeliveryCreateRequestDto;
+import com.sparta.logistics.delivery.application.dto.DeliveryUpdateRequestDto;
 import com.sparta.logistics.delivery.application.service.DeliveryService;
+import com.sparta.logistics.delivery.domain.Delivery;
 import com.sparta.logistics.delivery.infrastructure.persistence.search.DeliverySearchCondition;
+import com.sparta.logistics.delivery.infrastructure.persistence.security.Actor;
 import com.sparta.logistics.delivery.presentation.dto.DeliveryResponseDto;
+import com.sparta.logistics.delivery.presentation.util.actor.LoginActor;
 import com.sparta.logistics.delivery.presentation.util.search.SearchCondition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,5 +39,16 @@ public class DeliveryController {
         Page<DeliveryResponseDto> deliveryList = deliveryService.getDeliveryList(deliverySearchCondition);
 
         return ResponseEntity.ok(deliveryList);
+    }
+
+    @PatchMapping("/{deliveryId}")
+    public ResponseEntity<?> updateDelivery(@PathVariable Long deliveryId,
+                                            @RequestBody DeliveryUpdateRequestDto updateRequestDto,
+                                            @LoginActor Actor actor
+    ) {
+        Delivery domain = updateRequestDto.toDomain();
+        Delivery delivery = deliveryService.updateDelivery(domain, actor.userId());
+
+        return ResponseEntity.ok(DeliveryResponseDto.from(delivery));
     }
 }

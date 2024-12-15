@@ -1,6 +1,7 @@
 package com.sparta.logistics.delivery.infrastructure.persistence.entity;
 
 import com.sparta.logistics.delivery.application.dto.DeliveryCreateRequestDto;
+import com.sparta.logistics.delivery.domain.Delivery;
 import com.sparta.logistics.delivery.domain.vo.DeliveryStatus;
 import com.sparta.logistics.delivery.infrastructure.external.hubCompany.dto.CompanyResponse;
 import com.sparta.logistics.delivery.infrastructure.external.auth.dto.UserDetailResponse;
@@ -52,5 +53,15 @@ public class DeliveryEntity extends BaseEntity {
                 .originHubId(supplyCompany.hub().getHubId())
                 .destinationHubId(consumeCompany.hub().getHubId())
                 .build();
+    }
+
+    public void update(Delivery updateRequest, Long userId) {
+        this.status = updateRequest.status();
+        this.deliveryAddress = updateRequest.deliveryAddress();
+        this.recipientName = updateRequest.recipientName();
+        this.recipientSnsId = updateRequest.recipientSnsId();
+        this.originHubId = updateRequest.originHubId();
+        this.destinationHubId = updateRequest.destinationHubId();
+        setUpdatedBy(userId);
     }
 }
