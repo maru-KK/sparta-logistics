@@ -24,4 +24,9 @@ public class DeliveryAdapter implements DeliveryPort {
 
         return Delivery.from(deliveryRepository.save(entity));
     }
+
+    @Override
+    public boolean existOrderId(Long orderId) {
+        return deliveryRepository.existsByOrderId(orderId);
+    }
 }

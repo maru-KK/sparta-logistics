@@ -27,6 +27,10 @@ public class DeliveryService {
 
     @Transactional
     public Delivery createDelivery(DeliveryCreateRequestDto requestDto) {
+        boolean result = deliveryPort.existOrderId(requestDto.orderId());
+        if (result) {
+            throw new IllegalArgumentException("이미 존재하는 배송입니다.");
+        }
 
         CompanyResponse supplyCompany = hubCompanyPort.getCompanyById(requestDto.supplyCompanyId());
         CompanyResponse consumeCompany = hubCompanyPort.getCompanyById(requestDto.consumeCompanyId());
