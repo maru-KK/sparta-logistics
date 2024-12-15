@@ -31,7 +31,6 @@ public class OrderEventSubscriber {
         OrderCreateEvent orderCreateEvent = eventEnvelop.getEvent();
         Long orderId = orderCreateEvent.getOrderId();
         LocalDateTime createdAt = eventEnvelop.getCreatedAt();
-//        createdAt = LocalDateTime.of(2024, 12, 15, 9, 30);
         String eventKey = EVENT_KEY_PREFIX + orderId;
 
         // 현재 이벤트가 기존 이벤트보다 과거이거나 같은 시간이면 무시
