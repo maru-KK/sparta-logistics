@@ -10,9 +10,12 @@ import com.sparta.logistics.product.infrastructure.persistence.entity.ProductEnt
 import com.sparta.logistics.product.infrastructure.persistence.repository.ProductCommandRepository;
 import com.sparta.logistics.product.infrastructure.persistence.repository.ProductQueryRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class ProductCommandAdapter implements ProductOutputPort {
@@ -29,17 +32,27 @@ public class ProductCommandAdapter implements ProductOutputPort {
     @Transactional
     @Override
     public Product update(Product product, Long updatedBy) {
-        ProductEntity productEntity = findById(product.getId());
-        return productEntity.updateFrom(product, updatedBy)
-            .toDomain();
+        try {
+            ProductEntity productEntity = findById(product.getId());
+            return productEntity.updateFrom(product, updatedBy)
+                .toDomain();
+        } catch (OptimisticLockingFailureException e) {
+            log.warn("상품 수정 실패 ={}", e);
+            throw new ProductLogicException("다른 사용자가 상품 정보를 수정하고 있습니다. 다시 시도해주세요.");
+        }
     }
 
     @Transactional
     @Override
     public Product changeProductQuantity(ProductForUpdateQuantity product, Long updatedBy) {
-        ProductEntity productEntity = findById(product.getId());
-        return productEntity.changeQuantity(product, updatedBy)
-            .toDomain();
+        try {
+            ProductEntity productEntity = findById(product.getId());
+            return productEntity.changeQuantity(product, updatedBy)
+                .toDomain();
+        } catch (OptimisticLockingFailureException e) {
+            log.warn("상품 수정 실패 ={}", e);
+            throw new ProductLogicException("다른 사용자가 상품 정보를 수정하고 있습니다. 다시 시도해주세요.");
+        }
     }
 
     private ProductEntity findById(Long productId) {
