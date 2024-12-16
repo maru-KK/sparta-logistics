@@ -64,4 +64,9 @@ public class DeliveryEntity extends BaseEntity {
         this.destinationHubId = updateRequest.destinationHubId();
         setUpdatedBy(userId);
     }
+
+    public void updateStatus(String status, Long userId) {
+        this.status = DeliveryStatus.valueOf(status);
+        setUpdatedBy(userId);
+    }
 }

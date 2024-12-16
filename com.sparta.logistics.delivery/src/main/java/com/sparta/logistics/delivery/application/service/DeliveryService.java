@@ -1,6 +1,7 @@
 package com.sparta.logistics.delivery.application.service;
 
 import com.sparta.logistics.delivery.application.dto.DeliveryCreateRequestDto;
+import com.sparta.logistics.delivery.application.dto.DeliveryStatusUpdateRequestDto;
 import com.sparta.logistics.delivery.application.output.CompanyDeliveryRoutePort;
 import com.sparta.logistics.delivery.application.output.DeliveryLogPort;
 import com.sparta.logistics.delivery.application.output.DeliveryPort;
@@ -73,6 +74,7 @@ public class DeliveryService {
     private void sendAI(DeliveryCreateRequestDto requestDto, DeliveryPerson nextCompanyDeliveryPerson, UserDetailResponse userInfo, CompanyResponse supplyCompany, CompanyResponse consumeCompany) {
         UserDetailResponse deliveryPersonInfo = authPort.findUser(nextCompanyDeliveryPerson.userId());
         ProductDetailResponse productDetailResponse = productPort.findOne(requestDto.productId());
+
         infraPort.send(requestDto.orderId(), userInfo, productDetailResponse, requestDto.quantity(), requestDto.request(), supplyCompany, consumeCompany, deliveryPersonInfo);
     }
 
@@ -94,5 +96,17 @@ public class DeliveryService {
         delivery.updateValidate();
 
         return deliveryPort.update(delivery, userId);
+    }
+
+    @Transactional
+    public void updateHubDeliveryStatus(DeliveryStatusUpdateRequestDto.DeliveryLogStatusDto requestDto, Long userId) {
+        deliveryLogPort.update(requestDto, userId);
+        deliveryPort.updateHubDeliveryStatus(requestDto, userId);
+    }
+
+    @Transactional
+    public void updateCompanyDeliveryStatus(DeliveryStatusUpdateRequestDto.CompanyDeliveryLogStatusDto requestDto, Long userId) {
+        companyDeliveryRoutePort.update(requestDto, userId);
+        deliveryPort.updateCompanyDeliveryStatus(requestDto, userId);
     }
 }

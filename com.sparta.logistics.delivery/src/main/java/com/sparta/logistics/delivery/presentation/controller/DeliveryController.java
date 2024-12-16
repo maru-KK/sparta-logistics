@@ -1,6 +1,7 @@
 package com.sparta.logistics.delivery.presentation.controller;
 
 import com.sparta.logistics.delivery.application.dto.DeliveryCreateRequestDto;
+import com.sparta.logistics.delivery.application.dto.DeliveryStatusUpdateRequestDto;
 import com.sparta.logistics.delivery.application.dto.DeliveryUpdateRequestDto;
 import com.sparta.logistics.delivery.application.service.DeliveryService;
 import com.sparta.logistics.delivery.domain.Delivery;
@@ -11,6 +12,7 @@ import com.sparta.logistics.delivery.presentation.util.actor.LoginActor;
 import com.sparta.logistics.delivery.presentation.util.search.SearchCondition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,5 +52,26 @@ public class DeliveryController {
         Delivery delivery = deliveryService.updateDelivery(domain, actor.userId());
 
         return ResponseEntity.ok(DeliveryResponseDto.from(delivery));
+    }
+
+    @PatchMapping("/{deliveryId}/hub")
+    public ResponseEntity<?> updateHubDeliveryStatus(@PathVariable Long deliveryId,
+                                                     @RequestBody DeliveryStatusUpdateRequestDto.DeliveryLogStatusDto requestDto
+//                                                     @LoginActor Actor actor
+    ) {
+
+        deliveryService.updateHubDeliveryStatus(requestDto, 1L);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PatchMapping("/{deliveryId}/company")
+    public ResponseEntity<?> updateCompanyDeliveryStatus(@PathVariable Long deliveryId,
+                                                         @RequestBody DeliveryStatusUpdateRequestDto.CompanyDeliveryLogStatusDto request
+//                                                         @LoginActor Actor actor
+    ) {
+         deliveryService.updateCompanyDeliveryStatus(request, 1L);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
