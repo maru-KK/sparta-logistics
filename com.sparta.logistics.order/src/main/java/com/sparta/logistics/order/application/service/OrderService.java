@@ -41,4 +41,11 @@ public class OrderService {
         OrderForCreate canceledOrder = order.cancel();
         orderOutputPort.saveOrder(canceledOrder, product);
     }
+
+    public Order updateStatusInDeliver(Long orderId) {
+        Order order = orderOutputPort.findOrder(orderId).orElseThrow(() ->
+            new IllegalArgumentException("Order not found: " + orderId));
+
+        return orderOutputPort.update(order.inDeliver());
+    }
 }

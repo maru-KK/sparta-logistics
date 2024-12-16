@@ -10,6 +10,15 @@ public enum OrderEntityStatus {
         return OrderStatus.valueOf(this.name());
     }
 
+    public static OrderEntityStatus from(OrderStatus orderStatus) {
+        for (OrderEntityStatus orderEntityStatus : OrderEntityStatus.values()) {
+            if (orderEntityStatus.name().equalsIgnoreCase(orderStatus.name())) {
+                return orderEntityStatus;
+            }
+        }
+        return null;
+    }
+
     public static OrderEntityStatus of(String status) {
         for (OrderEntityStatus orderStatus : OrderEntityStatus.values()) {
             if (orderStatus.name().equalsIgnoreCase(status)) {

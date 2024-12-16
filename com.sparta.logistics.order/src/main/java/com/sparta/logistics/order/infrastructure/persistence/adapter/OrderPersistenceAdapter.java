@@ -2,13 +2,14 @@ package com.sparta.logistics.order.infrastructure.persistence.adapter;
 
 import com.sparta.logistics.order.application.exception.OrderNotCreateException;
 import com.sparta.logistics.order.application.outputport.OrderOutputPort;
-import com.sparta.logistics.order.domain.event.OrderCreateEvent;
+import com.sparta.logistics.order.domain.event.order.OrderCreateEvent;
 import com.sparta.logistics.order.domain.order.Order;
 import com.sparta.logistics.order.domain.order.OrderForCreate;
 import com.sparta.logistics.order.domain.order.Product;
 import com.sparta.logistics.order.infrastructure.event.adapter.OrderEventAdapter;
 import com.sparta.logistics.order.infrastructure.persistence.entity.OrderEntity;
 import com.sparta.logistics.order.infrastructure.persistence.repository.OrderRepository;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ public class OrderPersistenceAdapter implements OrderOutputPort {
 
     private final OrderRepository orderRepository;
     private final OrderEventAdapter orderEventAdapter;
+    private final OrderQueryAdapter orderQueryAdapter;
 
     @Transactional
     @Override
@@ -44,5 +46,20 @@ public class OrderPersistenceAdapter implements OrderOutputPort {
     public void saveOrder(OrderForCreate orderForCreate, Product product) {
         OrderEntity orderEntity = OrderEntity.from(orderForCreate, product);
         Order order = orderRepository.save(orderEntity).toDomain();
+    }
+
+    @Override
+    public Optional<Order> findOrder(Long orderId) {
+        return orderQueryAdapter.findOne(orderId);
+    }
+
+    @Transactional
+    @Override
+    public Order update(Order order) {
+        OrderEntity orderEntity = orderRepository.findById(order.getId())
+            .orElseThrow(() -> new IllegalArgumentException("order not found"));
+
+        orderEntity.updateStatusFrom(order);
+        return orderEntity.toDomain();
     }
 }

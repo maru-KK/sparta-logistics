@@ -81,4 +81,8 @@ public class OrderEntity extends BaseEntity {
             requestMessage, deliveryLimitedAt, OrderStatus.valueOf(status.name())
         );
     }
+
+    public void updateStatusFrom(Order order) {
+        this.status = OrderEntityStatus.from(order.getStatus());
+    }
 }
