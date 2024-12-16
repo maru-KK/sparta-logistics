@@ -6,6 +6,7 @@ import com.sparta.logistics.delivery.application.output.DeliveryLogPort;
 import com.sparta.logistics.delivery.application.output.DeliveryPort;
 import com.sparta.logistics.delivery.domain.Delivery;
 import com.sparta.logistics.delivery.domain.DeliveryPerson;
+import com.sparta.logistics.delivery.infrastructure.event.adapter.DeliveryEventAdapter;
 import com.sparta.logistics.delivery.infrastructure.external.auth.AuthPort;
 import com.sparta.logistics.delivery.infrastructure.external.auth.dto.UserDetailResponse;
 import com.sparta.logistics.delivery.infrastructure.external.hubCompany.HubCompanyPort;
@@ -34,6 +35,7 @@ public class DeliveryService {
     private final HubRoutePort hubRoutePort;
     private final InfraPort infraPort;
     private final ProductPort productPort;
+    private final DeliveryEventAdapter deliveryEventAdapter;
 
     @Transactional
     public Delivery createDelivery(DeliveryCreateRequestDto requestDto) {
@@ -61,12 +63,17 @@ public class DeliveryService {
 
         companyDeliveryRoutePort.save(delivery.deliveryId(), nextCompanyDeliveryPerson.deliveryPersonId(), consumeCompany);
 
-        UserDetailResponse deliveryPersonInfo = authPort.findUser(nextCompanyDeliveryPerson.userId());
-       ProductDetailResponse productDetailResponse = productPort.findOne(requestDto.productId());
+        deliveryEventAdapter.publish(delivery.createEvent());
 
-        infraPort.send(requestDto.orderId(), userInfo, productDetailResponse, requestDto.quantity(), requestDto.request(), supplyCompany, consumeCompany, deliveryPersonInfo );
+//        sendAI(requestDto, nextCompanyDeliveryPerson, userInfo, supplyCompany, consumeCompany);
 
         return delivery;
+    }
+
+    private void sendAI(DeliveryCreateRequestDto requestDto, DeliveryPerson nextCompanyDeliveryPerson, UserDetailResponse userInfo, CompanyResponse supplyCompany, CompanyResponse consumeCompany) {
+        UserDetailResponse deliveryPersonInfo = authPort.findUser(nextCompanyDeliveryPerson.userId());
+        ProductDetailResponse productDetailResponse = productPort.findOne(requestDto.productId());
+        infraPort.send(requestDto.orderId(), userInfo, productDetailResponse, requestDto.quantity(), requestDto.request(), supplyCompany, consumeCompany, deliveryPersonInfo);
     }
 
     public DeliveryResponseDto getDelivery(Long deliveryId) {
