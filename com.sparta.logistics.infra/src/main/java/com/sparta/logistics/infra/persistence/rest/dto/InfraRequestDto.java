@@ -1,4 +1,4 @@
-package com.sparta.logistics.infra.application.dto;
+package com.sparta.logistics.infra.persistence.rest.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

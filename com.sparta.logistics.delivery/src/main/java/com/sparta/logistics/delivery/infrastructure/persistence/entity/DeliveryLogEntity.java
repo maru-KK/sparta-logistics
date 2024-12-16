@@ -1,6 +1,7 @@
 package com.sparta.logistics.delivery.infrastructure.persistence.entity;
 
 import com.sparta.logistics.delivery.domain.Delivery;
+import com.sparta.logistics.delivery.domain.DeliveryLog;
 import com.sparta.logistics.delivery.domain.DeliveryPerson;
 import com.sparta.logistics.delivery.domain.vo.DeliveryLogStatus;
 import com.sparta.logistics.delivery.infrastructure.external.hubCompany.dto.HubRouteResponseDto;
@@ -60,5 +61,24 @@ public class DeliveryLogEntity extends BaseEntity {
                 .actualDuration(hubRouteInfo.actualDuration())
                 .actualDistance(hubRouteInfo.actualDistance())
                 .build();
+    }
+
+    public void setStatus(DeliveryLogStatus status) {
+        this.status = status;
+    }
+
+    public DeliveryLog toDomain() {
+        return new DeliveryLog(
+                deliveryLogId,
+                deliveryId,
+                originHubId,
+                destinationHubId,
+                deliveryPersonId,
+                status,
+                estimatedDuration,
+                actualDuration,
+                actualDistance,
+                this.getCreatedAt()
+        );
     }
 }

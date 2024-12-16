@@ -1,10 +1,11 @@
 package com.sparta.logistics.delivery.infrastructure.persistence.adapter;
 
+import com.sparta.logistics.delivery.application.dto.DeliveryStatusUpdateRequestDto;
 import com.sparta.logistics.delivery.application.output.CompanyDeliveryRoutePort;
 import com.sparta.logistics.delivery.domain.vo.CompanyDeliveryRouteStatus;
 import com.sparta.logistics.delivery.infrastructure.external.hubCompany.dto.CompanyResponse;
 import com.sparta.logistics.delivery.infrastructure.persistence.entity.CompanyDeliveryRouteEntity;
-import com.sparta.logistics.delivery.infrastructure.persistence.repository.CompanyDeliveryRouteRepository;
+import com.sparta.logistics.delivery.infrastructure.persistence.repository.companyDelivery.CompanyDeliveryRouteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -25,5 +26,14 @@ public class CompanyDeliveryRouteAdapter implements CompanyDeliveryRoutePort {
                 .build();
 
         companyDeliveryRouteRepository.save(entity);
+    }
+
+    @Override
+    public void update(DeliveryStatusUpdateRequestDto.CompanyDeliveryLogStatusDto requestDto, Long userId) {
+        CompanyDeliveryRouteEntity entity = companyDeliveryRouteRepository.findByDeliveryId(requestDto.deliveryId());
+        if (!entity.getDeliveryPersonId().equals(userId)) {
+            throw new IllegalArgumentException("해당 업체 배송 담당자가 아닙니다.");
+        }
+        entity.setStatus(requestDto.status());
     }
 }

@@ -1,13 +1,14 @@
 package com.sparta.logistics.delivery.infrastructure.persistence.adapter;
 
 import com.sparta.logistics.delivery.application.dto.DeliveryCreateRequestDto;
+import com.sparta.logistics.delivery.application.dto.DeliveryStatusUpdateRequestDto;
 import com.sparta.logistics.delivery.application.output.DeliveryPort;
 import com.sparta.logistics.delivery.domain.Delivery;
 import com.sparta.logistics.delivery.infrastructure.external.auth.dto.UserDetailResponse;
 import com.sparta.logistics.delivery.infrastructure.external.hubCompany.dto.CompanyResponse;
 import com.sparta.logistics.delivery.infrastructure.persistence.entity.DeliveryEntity;
-import com.sparta.logistics.delivery.infrastructure.persistence.repository.DeliveryQueryDslRepository;
-import com.sparta.logistics.delivery.infrastructure.persistence.repository.DeliveryRepository;
+import com.sparta.logistics.delivery.infrastructure.persistence.repository.delivery.DeliveryQueryDslRepository;
+import com.sparta.logistics.delivery.infrastructure.persistence.repository.delivery.DeliveryRepository;
 import com.sparta.logistics.delivery.infrastructure.persistence.search.DeliverySearchCondition;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +42,18 @@ public class DeliveryAdapter implements DeliveryPort {
         deliveryEntity.update(updateRequestDto, userId);
 
         return Delivery.from(deliveryEntity);
+    }
+
+    @Override
+    public void updateHubDeliveryStatus(DeliveryStatusUpdateRequestDto.DeliveryLogStatusDto request, Long userId) {
+        DeliveryEntity deliveryEntity = deliveryRepository.findById(request.deliveryId()).orElseThrow();
+        deliveryEntity.updateStatus(request.status().name(), userId);
+    }
+
+    @Override
+    public void updateCompanyDeliveryStatus(DeliveryStatusUpdateRequestDto.CompanyDeliveryLogStatusDto request, Long userId) {
+        DeliveryEntity deliveryEntity = deliveryRepository.findById(request.deliveryId()).orElseThrow();
+        deliveryEntity.updateStatus(request.status().name(), userId);
     }
 
     @Override

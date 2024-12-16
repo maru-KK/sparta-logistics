@@ -2,6 +2,7 @@ package com.sparta.logistics.delivery.application.service;
 
 import com.sparta.logistics.delivery.application.dto.DeliveryPersonResponse;
 import com.sparta.logistics.delivery.application.output.DeliveryPersonPort;
+import com.sparta.logistics.delivery.application.output.DeliveryPort;
 import com.sparta.logistics.delivery.domain.DeliveryPerson;
 import com.sparta.logistics.delivery.infrastructure.external.auth.AuthPort;
 import com.sparta.logistics.delivery.infrastructure.external.auth.dto.UserDetailResponse;
@@ -24,7 +25,6 @@ public class DeliveryPersonService {
     @Transactional
     public DeliveryPersonResponse createDeliveryPerson(DeliveryPersonCreateRequestDto requestDto) {
         UserDetailResponse user = authPort.findUser(requestDto.userId());
-        validateUserRole(user);
 //
         DeliveryPerson deliveryPerson = deliveryPersonPort.saveDeliveryPerson(DeliveryPerson.from(requestDto), user);
 
@@ -55,12 +55,6 @@ public class DeliveryPersonService {
         DeliveryPersonEntity nextCompanyDeliveryPerson = deliveryPersonPort.getNextCompanyDeliveryPerson(hubId);
 
         return DeliveryPerson.from(nextCompanyDeliveryPerson);
-    }
-
-    private void validateUserRole(UserDetailResponse user) {
-        if (!user.role().equals("DELIVERY")) {
-            throw new IllegalArgumentException("배송 담당자로 지정될 수 없는 회원입니다.");
-        }
     }
 
     @Transactional

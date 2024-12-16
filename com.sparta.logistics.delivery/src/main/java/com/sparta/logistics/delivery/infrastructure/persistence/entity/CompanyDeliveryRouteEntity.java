@@ -44,9 +44,12 @@ public class CompanyDeliveryRouteEntity extends BaseEntity {
     private CompanyDeliveryRouteStatus status;
 
     @Column(name = "delivery_person_id")
-    private Long deliveryPersonId;    // 배송 담당자 ID
+    private Long deliveryPersonId;
 
     @Column(name = "sequence")
-    private Integer sequence;         // 배송 순서
+    private Integer sequence;
 
+    public void setStatus(CompanyDeliveryRouteStatus status) {
+        this.status = status;
+    }
 }

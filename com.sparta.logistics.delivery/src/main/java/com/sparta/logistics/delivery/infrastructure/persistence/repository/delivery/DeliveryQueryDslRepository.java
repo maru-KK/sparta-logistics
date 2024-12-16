@@ -1,4 +1,4 @@
-package com.sparta.logistics.delivery.infrastructure.persistence.repository;
+package com.sparta.logistics.delivery.infrastructure.persistence.repository.delivery;
 
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;

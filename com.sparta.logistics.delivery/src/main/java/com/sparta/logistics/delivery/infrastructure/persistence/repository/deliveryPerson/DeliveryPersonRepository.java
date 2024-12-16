@@ -1,4 +1,4 @@
-package com.sparta.logistics.delivery.infrastructure.persistence.repository;
+package com.sparta.logistics.delivery.infrastructure.persistence.repository.deliveryPerson;
 
 import com.sparta.logistics.delivery.domain.vo.DeliveryPersonStatus;
 import com.sparta.logistics.delivery.domain.vo.DeliveryPersonType;

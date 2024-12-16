@@ -2,10 +2,13 @@ package com.sparta.logistics.hubcompany.application.service;
 
 import com.sparta.logistics.hubcompany.application.dto.HubCreationRequestDto;
 import com.sparta.logistics.hubcompany.application.dto.HubResponseDto;
+import com.sparta.logistics.hubcompany.domain.Hub;
+import com.sparta.logistics.hubcompany.infrastructure.cache.adaptor.HubCacheAdapter;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.entity.HubEntity;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.repository.HubRepository;
 import com.sparta.logistics.hubcompany.presentation.exception.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +19,7 @@ import java.util.stream.Collectors;
 public class HubServiceImpl implements HubService {
 
     private final HubRepository hubRepository;
+    private final HubCacheAdapter hubCacheAdapter;
 
     @Override
     public HubEntity getHubById(Long hubId) {
@@ -45,5 +49,4 @@ public class HubServiceImpl implements HubService {
 
         return new HubResponseDto(savedHub);
     }
-
 }

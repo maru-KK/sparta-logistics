@@ -15,7 +15,8 @@ public record Delivery(
         Long orderId,
         Long originHubId,
         Long destinationHubId,
-        LocalDateTime createdAt) {
+        LocalDateTime createdAt
+) {
 
     public static Delivery from(DeliveryEntity entity) {
         return new Delivery(

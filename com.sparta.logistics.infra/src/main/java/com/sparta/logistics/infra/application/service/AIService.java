@@ -3,10 +3,15 @@ package com.sparta.logistics.infra.application.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.logistics.infra.application.dto.InfraRequestDto;
+import com.sparta.logistics.infra.application.util.AIUtil;
+import com.sparta.logistics.infra.domain.slack.SlackToSendMessage;
 import com.sparta.logistics.infra.infrastructure.persistence.entity.AIEntity;
 import com.sparta.logistics.infra.infrastructure.persistence.repository.AIRepository;
+import com.sparta.logistics.infra.infrastructure.slack.adapter.SlackMessageAdapter;
+import com.sparta.logistics.infra.persistence.rest.dto.InfraRequestDto;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -29,8 +34,10 @@ public class AIService {
     private final AIRepository aiRepository;
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final SlackMessageAdapter slackMessageAdapter;
 
     public AIEntity generateResponse(InfraRequestDto requestDto) {
+
         String aiPrompt = buildAIRequestPrompt(requestDto);
 
         String requestBody = "{ \"contents\": [ { \"parts\": [ { \"text\": \"" + aiPrompt.replace("\"", "\\\"") + "\" } ] } ] }";
@@ -40,9 +47,22 @@ public class AIService {
 
         HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
         ResponseEntity<String> response = restTemplate.exchange(
-                API_URL + "?key=" + apiKey, HttpMethod.POST, request, String.class
+            API_URL + "?key=" + apiKey, HttpMethod.POST, request, String.class
         );
 
+        String formattedResponse = parseFormattedResponse(response);
+        AIEntity aiDescription = AIEntity.builder()
+                .question(aiPrompt)
+                .answer(formattedResponse.toString())
+                .build();
+
+        String message = AIUtil.createSlackMessage(requestDto, aiDescription.getAnswer());
+        sendMessageToSlack(message, requestDto.getSnsAccount());
+        return aiRepository.save(aiDescription);
+    }
+
+    @NotNull
+    private String parseFormattedResponse(ResponseEntity<String> response) {
         String aiResponse = response.getBody();
         JsonNode rootNode = null;
 
@@ -50,7 +70,7 @@ public class AIService {
             rootNode = objectMapper.readTree(aiResponse);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            return null;
+            throw new IllegalArgumentException("Unable to parse AI response");
         }
 
         JsonNode candidates = rootNode.path("candidates");
@@ -72,13 +92,13 @@ public class AIService {
                 }
             }
         }
+        return formattedResponse.toString();
+    }
 
-        AIEntity aiDescription = AIEntity.builder()
-                .question(aiPrompt)
-                .answer(formattedResponse.toString())
-                .build();
-
-        return aiRepository.save(aiDescription);
+    private void sendMessageToSlack(String message, String snsAccount) {
+        SlackToSendMessage slackToSendMessage =
+            new SlackToSendMessage(message, List.of(snsAccount));
+        slackMessageAdapter.sendMessage(slackToSendMessage);
     }
 
     private String buildAIRequestPrompt(InfraRequestDto requestDto) {
