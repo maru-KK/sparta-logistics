@@ -1,8 +1,8 @@
 package com.sparta.logistics.infra.persistence.rest.controller;
 
-import com.sparta.logistics.infra.application.dto.InfraRequestDto;
 import com.sparta.logistics.infra.application.service.AIService;
 import com.sparta.logistics.infra.infrastructure.persistence.entity.AIEntity;
+import com.sparta.logistics.infra.persistence.rest.dto.InfraRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +21,6 @@ public class AIController {
     @PostMapping
     public ResponseEntity<AIEntity> generateResponse(@RequestBody InfraRequestDto infraRequestDto) {
         AIEntity aiEntity = aiService.generateResponse(infraRequestDto);
-        if (aiEntity != null) {
-            return ResponseEntity.ok(aiEntity);
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return ResponseEntity.ok(aiEntity);
     }
 }
