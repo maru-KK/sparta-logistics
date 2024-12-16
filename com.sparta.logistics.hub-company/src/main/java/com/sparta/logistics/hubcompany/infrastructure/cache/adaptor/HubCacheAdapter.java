@@ -23,12 +23,6 @@ public class HubCacheAdapter {
         return hubCache.toDomain();
     }
 
-    public Optional<Hub> findOne(Hub hub) {
-        HubCache hubCache = HubCache.from(hub);
-        return Optional.ofNullable(valueOperations.get(hubCache.key()))
-                .map(HubCache::toDomain);
-    }
-
     public Optional<Hub> findById(Long id) {
         String key = HubCache.findKeyFrom(id);
         return Optional.ofNullable(valueOperations.get(key))
