@@ -4,7 +4,7 @@ import com.sparta.logistics.order.domain.order.vo.OrderStatus;
 
 public enum OrderEntityStatus {
 
-    ACCEPTED, IN_TRANSIT, DELIVERED, CANCELED;
+    ACCEPTED, IN_TRANSIT, IN_DELIVER, CANCELED;
 
     public OrderStatus toDomain() {
         return OrderStatus.valueOf(this.name());
