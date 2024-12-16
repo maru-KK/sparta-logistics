@@ -1,14 +1,11 @@
 package com.sparta.logistics.infra.application.util;
 
-import com.sparta.logistics.infra.application.dto.InfraRequestDto;
+import com.sparta.logistics.infra.persistence.rest.dto.InfraRequestDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
-@Component
-@RequiredArgsConstructor
 public class AIUtil {
 
-    public String createSlackMessage(InfraRequestDto deliveryData, String aiResponse) {
+    public static String createSlackMessage(InfraRequestDto deliveryData, String aiResponse) {
         try {
             return String.format(
                     "주문 번호: %s\n" +
