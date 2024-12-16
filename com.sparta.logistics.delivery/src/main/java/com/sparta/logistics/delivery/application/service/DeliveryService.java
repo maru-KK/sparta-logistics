@@ -11,6 +11,9 @@ import com.sparta.logistics.delivery.infrastructure.external.hubCompany.HubCompa
 import com.sparta.logistics.delivery.infrastructure.external.hubCompany.dto.CompanyResponse;
 import com.sparta.logistics.delivery.infrastructure.external.hubCompany.dto.HubRouteResponseDto;
 import com.sparta.logistics.delivery.infrastructure.external.hubRoute.HubRoutePort;
+import com.sparta.logistics.delivery.infrastructure.external.infra.InfraPort;
+import com.sparta.logistics.delivery.infrastructure.external.product.ProductDetailResponse;
+import com.sparta.logistics.delivery.infrastructure.external.product.ProductPort;
 import com.sparta.logistics.delivery.infrastructure.persistence.search.DeliverySearchCondition;
 import com.sparta.logistics.delivery.presentation.dto.DeliveryResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +30,8 @@ public class DeliveryService {
     private final HubCompanyPort hubCompanyPort;
     private final DeliveryPersonService deliveryPersonService;
     private final HubRoutePort hubRoutePort;
+    private final InfraPort infraPort;
+    private final ProductPort productPort;
 
     @Transactional
     public Delivery createDelivery(DeliveryCreateRequestDto requestDto) {
@@ -51,6 +56,11 @@ public class DeliveryService {
         // 허브 루트 정보 조회
         HubRouteResponseDto hubRouteInfo = hubRoutePort.getRouteByOriginAndDestination(supplyCompany.hub().getHubId(), consumeCompany.hub().getHubId());
         deliveryLogPort.save(delivery, hubRouteInfo, nextHubDeliveryPerson);
+
+        UserDetailResponse deliveryPersonInfo = authPort.findUser(nextCompanyDeliveryPerson.userId());
+       ProductDetailResponse productDetailResponse = productPort.findOne(requestDto.productId());
+
+        infraPort.send(requestDto.orderId(), userInfo, productDetailResponse, requestDto.quantity(), requestDto.request(), supplyCompany, consumeCompany, deliveryPersonInfo );
 
         return delivery;
     }
