@@ -62,4 +62,9 @@ public class DeliveryPersonService {
             throw new IllegalArgumentException("배송 담당자로 지정될 수 없는 회원입니다.");
         }
     }
+
+    @Transactional
+    public DeliveryPerson update(DeliveryPerson requestDto) {
+        return  deliveryPersonPort.update(requestDto);
+    }
 }

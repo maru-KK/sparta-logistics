@@ -2,6 +2,7 @@ package com.sparta.logistics.delivery.infrastructure.persistence.adapter;
 
 import com.sparta.logistics.delivery.application.output.DeliveryPersonPort;
 import com.sparta.logistics.delivery.domain.DeliveryPerson;
+import com.sparta.logistics.delivery.domain.vo.DeliveryPersonStatus;
 import com.sparta.logistics.delivery.infrastructure.external.auth.dto.UserDetailResponse;
 import com.sparta.logistics.delivery.infrastructure.external.hubCompany.HubCompanyPort;
 import com.sparta.logistics.delivery.infrastructure.persistence.entity.DeliveryPersonEntity;
@@ -53,6 +54,8 @@ public class DeliveryPersonAdapter implements DeliveryPersonPort {
 
         redisTemplate.opsForValue().set(key, currentSequence + 1);
 
+        deliveryPersonEntity.setStatus(DeliveryPersonStatus.DELIVERING);
+
         return deliveryPersonEntity;
     }
 
@@ -75,7 +78,23 @@ public class DeliveryPersonAdapter implements DeliveryPersonPort {
 
         redisTemplate.opsForValue().set(key, currentSequence + 1);
 
+        deliveryPersonEntity.setStatus(DeliveryPersonStatus.DELIVERING);
+
         return deliveryPersonEntity;
+    }
+
+    @Override
+    public DeliveryPerson update(DeliveryPerson requestDto) {
+        DeliveryPersonEntity entity = deliveryPersonRepository.findById(requestDto.deliveryPersonId()).orElseThrow(() -> new IllegalStateException("배송 담당자를 찾을 수 없습니다."));
+
+        if (requestDto.hubId() != null) {
+            HubDeliveryPersonEntity hubDeliveryPersonEntity = hubDeliveryPersonRepository.findByDeliveryPersonId(requestDto.deliveryPersonId());
+            hubDeliveryPersonEntity.setHubId(requestDto.hubId());
+        }
+
+        entity.update(requestDto, () -> deliveryPersonRepository.findMaxSequence(requestDto.type()));
+
+        return DeliveryPerson.from(entity);
     }
 
     @Override

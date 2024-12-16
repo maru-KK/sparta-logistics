@@ -26,4 +26,8 @@ public class HubDeliveryPersonEntity extends BaseEntity{
         this.deliveryPersonId = deliveryPersonId;
         this.hubId = hubId;
     }
+
+    public void setHubId(Long hubId) {
+        this.hubId = hubId;
+    }
 }
