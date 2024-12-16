@@ -7,7 +7,7 @@ import com.sparta.logistics.delivery.infrastructure.external.auth.dto.UserDetail
 import com.sparta.logistics.delivery.infrastructure.external.hubCompany.HubCompanyPort;
 import com.sparta.logistics.delivery.infrastructure.persistence.entity.DeliveryPersonEntity;
 import com.sparta.logistics.delivery.infrastructure.persistence.entity.HubDeliveryPersonEntity;
-import com.sparta.logistics.delivery.infrastructure.persistence.repository.DeliveryPersonRepository;
+import com.sparta.logistics.delivery.infrastructure.persistence.repository.deliveryPerson.DeliveryPersonRepository;
 import com.sparta.logistics.delivery.infrastructure.persistence.repository.HubDeliveryPersonRepository;
 import com.sparta.logistics.delivery.presentation.util.exception.DeliveryPersonNotFoundException;
 import lombok.RequiredArgsConstructor;

@@ -5,7 +5,7 @@ import com.sparta.logistics.delivery.application.output.CompanyDeliveryRoutePort
 import com.sparta.logistics.delivery.domain.vo.CompanyDeliveryRouteStatus;
 import com.sparta.logistics.delivery.infrastructure.external.hubCompany.dto.CompanyResponse;
 import com.sparta.logistics.delivery.infrastructure.persistence.entity.CompanyDeliveryRouteEntity;
-import com.sparta.logistics.delivery.infrastructure.persistence.repository.CompanyDeliveryRouteRepository;
+import com.sparta.logistics.delivery.infrastructure.persistence.repository.companyDelivery.CompanyDeliveryRouteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
