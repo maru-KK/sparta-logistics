@@ -12,6 +12,14 @@ public class DomainEventEnvelop<T extends DomainEvent> {
     private String eventType;
     private String source;
 
+    public DomainEventEnvelop(T event, String source) {
+        this.event = event;
+        this.eventId = UUID.randomUUID();
+        this.createdAt = LocalDateTime.now();
+        this.eventType = event.getClass().getTypeName();
+        this.source = source;
+    }
+
     // for jackson serialize
     public DomainEventEnvelop() {
 
