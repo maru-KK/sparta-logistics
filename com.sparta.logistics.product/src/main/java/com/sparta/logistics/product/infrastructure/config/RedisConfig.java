@@ -17,6 +17,7 @@ public class RedisConfig {
     ) {
         RedisTemplate<String, ProductCache> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
+        template.setKeySerializer(RedisSerializer.string());
         template.setValueSerializer(RedisSerializer.json());
         return template;
     }
