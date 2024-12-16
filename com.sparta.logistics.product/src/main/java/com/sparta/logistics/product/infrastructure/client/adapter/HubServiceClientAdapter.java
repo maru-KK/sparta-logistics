@@ -20,7 +20,7 @@ public class HubServiceClientAdapter implements HubOutputPort {
     @CircuitBreaker(name = "productService", fallbackMethod = "fallbackFindCompany")
     @Override
     public Optional<Company> findCompany(Long userId) {
-        return Optional.of(hubServiceClient.getCompanyByUserId(userId).getBody().getData())
+        return Optional.of(hubServiceClient.getCompanyByUserId(userId).getBody().get(0))
             .map(CompanyDetailClientResponse::toDomain)
             .or(Optional::empty);
     }

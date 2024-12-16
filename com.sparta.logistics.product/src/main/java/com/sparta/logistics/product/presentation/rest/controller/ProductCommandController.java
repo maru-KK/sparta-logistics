@@ -38,10 +38,6 @@ public class ProductCommandController {
         @RequestBody ProductCreation.Request request,
         @LoginActor Actor actor
     ) {
-        if (!Objects.equals(actor.role(), Role.COMPANY)) {
-            throw new IllegalArgumentException("비정상적인 접근");
-        }
-
         ProductForCreate productForCreate = request.toDomain(actor.userId());
         Product product = productService.createProduct(productForCreate);
 
@@ -56,8 +52,7 @@ public class ProductCommandController {
         @LoginActor Actor actor
     ) {
         // 권한 처리 로직 추가 예정
-        if (!Objects.equals(request.getProductId(), productId) ||
-            !Objects.equals(actor.role(), Role.COMPANY)) {
+        if (!Objects.equals(request.getProductId(), productId)) {
             throw new IllegalArgumentException("비정상적인 접근");
         }
 
