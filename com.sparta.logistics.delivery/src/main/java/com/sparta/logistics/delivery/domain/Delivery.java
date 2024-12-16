@@ -1,5 +1,6 @@
 package com.sparta.logistics.delivery.domain;
 
+import com.sparta.logistics.delivery.domain.event.DeliveryCreateEvent;
 import com.sparta.logistics.delivery.domain.vo.DeliveryStatus;
 import com.sparta.logistics.delivery.infrastructure.persistence.entity.DeliveryEntity;
 
@@ -27,6 +28,12 @@ public record Delivery(
                 entity.getOriginHubId(),
                 entity.getDestinationHubId(),
                 entity.getCreatedAt());
+    }
+
+    public DeliveryCreateEvent createEvent() {
+        return new DeliveryCreateEvent(
+            deliveryId, status.name(), deliveryAddress, recipientName, recipientSnsId, orderId, originHubId, destinationHubId, createdAt
+        );
     }
 
     public void updateValidate() {
