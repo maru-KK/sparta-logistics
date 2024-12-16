@@ -1,4 +1,4 @@
-package com.sparta.logistics.delivery.infrastructure.persistence.repository;
+package com.sparta.logistics.delivery.infrastructure.persistence.repository.companyDelivery;
 
 import com.sparta.logistics.delivery.infrastructure.persistence.entity.CompanyDeliveryRouteEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

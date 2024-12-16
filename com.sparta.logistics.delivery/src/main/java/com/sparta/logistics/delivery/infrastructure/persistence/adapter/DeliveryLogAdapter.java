@@ -6,7 +6,7 @@ import com.sparta.logistics.delivery.domain.Delivery;
 import com.sparta.logistics.delivery.domain.DeliveryPerson;
 import com.sparta.logistics.delivery.infrastructure.external.hubCompany.dto.HubRouteResponseDto;
 import com.sparta.logistics.delivery.infrastructure.persistence.entity.DeliveryLogEntity;
-import com.sparta.logistics.delivery.infrastructure.persistence.repository.DeliveryLogRepository;
+import com.sparta.logistics.delivery.infrastructure.persistence.repository.deliveryLog.DeliveryLogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
