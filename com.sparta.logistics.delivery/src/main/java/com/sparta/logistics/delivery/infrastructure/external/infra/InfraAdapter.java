@@ -22,7 +22,8 @@ public class InfraAdapter implements InfraPort {
                 supplyCompany.hub().getAddress(),
                 consumeCompany.hub().getAddress(),
                 consumeCompany.address(),
-                nextCompanyDeliveryPerson.username()
+                nextCompanyDeliveryPerson.username(),
+                userInfo.snsAccount()
         );
 
         infraFeignClient.send(infraRequestDto);

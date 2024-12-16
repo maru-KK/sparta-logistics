@@ -9,7 +9,7 @@ public record InfraRequestDto(
         String originHub,
         String destinationHub,
         String companyAddress,
-        String deliveryPersonName
-
+        String deliveryPersonName,
+        String snsAccount
 ) {
 }

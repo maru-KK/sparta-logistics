@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface HubDeliveryPersonRepository extends JpaRepository<HubDeliveryPersonEntity, Long> {
 
+    HubDeliveryPersonEntity findByDeliveryPersonId(Long deliveryPersonId);
 }

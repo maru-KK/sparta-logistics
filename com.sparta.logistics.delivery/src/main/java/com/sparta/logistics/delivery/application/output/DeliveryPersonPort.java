@@ -17,4 +17,6 @@ public interface DeliveryPersonPort {
     DeliveryPersonEntity getNextHubDeliveryPerson();
 
     DeliveryPersonEntity getNextCompanyDeliveryPerson(Long hubId);
+
+    DeliveryPerson update(DeliveryPerson requestDto);
 }

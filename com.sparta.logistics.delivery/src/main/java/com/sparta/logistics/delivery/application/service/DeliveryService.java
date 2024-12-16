@@ -1,10 +1,12 @@
 package com.sparta.logistics.delivery.application.service;
 
 import com.sparta.logistics.delivery.application.dto.DeliveryCreateRequestDto;
+import com.sparta.logistics.delivery.application.output.CompanyDeliveryRoutePort;
 import com.sparta.logistics.delivery.application.output.DeliveryLogPort;
 import com.sparta.logistics.delivery.application.output.DeliveryPort;
 import com.sparta.logistics.delivery.domain.Delivery;
 import com.sparta.logistics.delivery.domain.DeliveryPerson;
+import com.sparta.logistics.delivery.infrastructure.event.adapter.DeliveryEventAdapter;
 import com.sparta.logistics.delivery.infrastructure.external.auth.AuthPort;
 import com.sparta.logistics.delivery.infrastructure.external.auth.dto.UserDetailResponse;
 import com.sparta.logistics.delivery.infrastructure.external.hubCompany.HubCompanyPort;
@@ -26,12 +28,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class DeliveryService {
     private final DeliveryPort deliveryPort;
     private final DeliveryLogPort deliveryLogPort;
+    private final CompanyDeliveryRoutePort companyDeliveryRoutePort;
     private final AuthPort authPort;
     private final HubCompanyPort hubCompanyPort;
     private final DeliveryPersonService deliveryPersonService;
     private final HubRoutePort hubRoutePort;
     private final InfraPort infraPort;
     private final ProductPort productPort;
+    private final DeliveryEventAdapter deliveryEventAdapter;
 
     @Transactional
     public Delivery createDelivery(DeliveryCreateRequestDto requestDto) {
@@ -57,12 +61,19 @@ public class DeliveryService {
         HubRouteResponseDto hubRouteInfo = hubRoutePort.getRouteByOriginAndDestination(supplyCompany.hub().getHubId(), consumeCompany.hub().getHubId());
         deliveryLogPort.save(delivery, hubRouteInfo, nextHubDeliveryPerson);
 
-        UserDetailResponse deliveryPersonInfo = authPort.findUser(nextCompanyDeliveryPerson.userId());
-       ProductDetailResponse productDetailResponse = productPort.findOne(requestDto.productId());
+        companyDeliveryRoutePort.save(delivery.deliveryId(), nextCompanyDeliveryPerson.deliveryPersonId(), consumeCompany);
 
-        infraPort.send(requestDto.orderId(), userInfo, productDetailResponse, requestDto.quantity(), requestDto.request(), supplyCompany, consumeCompany, deliveryPersonInfo );
+        deliveryEventAdapter.publish(delivery.createEvent());
+
+//        sendAI(requestDto, nextCompanyDeliveryPerson, userInfo, supplyCompany, consumeCompany);
 
         return delivery;
+    }
+
+    private void sendAI(DeliveryCreateRequestDto requestDto, DeliveryPerson nextCompanyDeliveryPerson, UserDetailResponse userInfo, CompanyResponse supplyCompany, CompanyResponse consumeCompany) {
+        UserDetailResponse deliveryPersonInfo = authPort.findUser(nextCompanyDeliveryPerson.userId());
+        ProductDetailResponse productDetailResponse = productPort.findOne(requestDto.productId());
+        infraPort.send(requestDto.orderId(), userInfo, productDetailResponse, requestDto.quantity(), requestDto.request(), supplyCompany, consumeCompany, deliveryPersonInfo);
     }
 
     public DeliveryResponseDto getDelivery(Long deliveryId) {

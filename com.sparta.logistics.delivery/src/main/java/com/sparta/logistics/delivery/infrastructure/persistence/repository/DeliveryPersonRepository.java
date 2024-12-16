@@ -32,5 +32,8 @@ public interface DeliveryPersonRepository extends JpaRepository<DeliveryPersonEn
             "ORDER BY d.sequence ASC")
     List<DeliveryPersonEntity> findByCompanyDeliveryPerson(@Param("type") DeliveryPersonType type, @Param("status") DeliveryPersonStatus status, @Param("hubId") Long hubId);
 
-
+    @Query("SELECT MAX(d.sequence) " +
+            "FROM p_delivery_person d " +
+            "WHERE d.type = :type")
+    Integer findMaxSequence(@Param("type") DeliveryPersonType type);
 }
