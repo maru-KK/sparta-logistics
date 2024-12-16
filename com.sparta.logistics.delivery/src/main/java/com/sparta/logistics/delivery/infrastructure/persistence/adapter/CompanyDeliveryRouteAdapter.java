@@ -20,7 +20,7 @@ public class CompanyDeliveryRouteAdapter implements CompanyDeliveryRoutePort {
                 .deliveryId(deliveryId)
                 .originHubId(consumeCompany.hub().getHubId())
                 .companyId(consumeCompany.companyId())
-                .status(CompanyDeliveryRouteStatus.IN_DELIVERY)
+                .status(CompanyDeliveryRouteStatus.PENDING)
                 .deliveryPersonId(deliveryPersonId)
                 .build();
 
