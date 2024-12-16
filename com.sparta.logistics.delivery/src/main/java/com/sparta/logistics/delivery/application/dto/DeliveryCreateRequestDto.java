@@ -9,6 +9,8 @@ public record DeliveryCreateRequestDto(
         Long consumeCompanyId,
         Long supplyCompanyId,
         String request,
+        Long productId,
+        Integer quantity,
         LocalDateTime deliveryLimitedAt
 
 ) {
@@ -18,6 +20,8 @@ public record DeliveryCreateRequestDto(
                 orderCreateEvent.getConsumeCompanyId(),
                 orderCreateEvent.getSupplyCompanyId(),
                 orderCreateEvent.getRequestMessage(),
+                orderCreateEvent.getProductId(),
+                orderCreateEvent.getQuantity(),
                 orderCreateEvent.getDeliveryLimitedAt()
         );
     }
