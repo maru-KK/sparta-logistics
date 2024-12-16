@@ -44,4 +44,10 @@ public class OrderQueryAdapter {
         }
         return orderEntity.get();
     }
+
+    public Optional<Order> findOne(Long orderId) {
+        return orderQueryRepository.findOne(orderId)
+            .map(OrderEntity::toDomain)
+            .or(Optional::empty);
+    }
 }

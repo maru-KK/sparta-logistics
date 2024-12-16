@@ -1,4 +1,6 @@
-package com.sparta.logistics.order.domain.event;
+package com.sparta.logistics.order.domain.event.order;
+
+import com.sparta.logistics.order.domain.event.DomainEvent;
 
 public class OrderCreateEvent implements DomainEvent {
 

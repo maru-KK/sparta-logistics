@@ -2,7 +2,7 @@ package com.sparta.logistics.order.infrastructure.event.publisher;
 
 import com.sparta.logistics.order.domain.event.DomainEvent;
 import com.sparta.logistics.order.domain.event.DomainEventEnvelop;
-import com.sparta.logistics.order.domain.event.OrderCreateEvent;
+import com.sparta.logistics.order.domain.event.order.OrderCreateEvent;
 import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -2,7 +2,7 @@ package com.sparta.logistics.order.infrastructure.event.adapter;
 
 
 import com.sparta.logistics.order.domain.event.DomainEventEnvelop;
-import com.sparta.logistics.order.domain.event.OrderCreateEvent;
+import com.sparta.logistics.order.domain.event.order.OrderCreateEvent;
 import com.sparta.logistics.order.infrastructure.event.publisher.OrderEventPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
