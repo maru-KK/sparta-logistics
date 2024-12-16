@@ -23,6 +23,10 @@ public class ProductCache implements Serializable {
     private Integer quantity;
     private String name;
 
+    public static String findKeyFrom(Long productId) {
+        return String.format(KEY_FORMAT, productId);
+    }
+
     public Product toDomain() {
         return new Product(
             id, hubId, companyId, Quantity.valueOf(quantity), name

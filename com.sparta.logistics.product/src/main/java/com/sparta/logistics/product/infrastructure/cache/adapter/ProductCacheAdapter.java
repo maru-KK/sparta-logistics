@@ -28,4 +28,11 @@ public class ProductCacheAdapter {
             .map(ProductCache::toDomain)
             .or(Optional::empty);
     }
+
+    public Optional<Product> findOne(Long productId) {
+        String key = ProductCache.findKeyFrom(productId);
+        return Optional.ofNullable(productOperations.get(key))
+            .map(ProductCache::toDomain)
+            .or(Optional::empty);
+    }
 }
