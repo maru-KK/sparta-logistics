@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum CompanyDeliveryRouteStatus {
+    PENDING("대기중"),
     IN_DELIVERY("업체 이동중"),
     COMPLETED("배송 완료");
 
