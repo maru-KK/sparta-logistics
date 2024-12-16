@@ -1,5 +1,8 @@
 package com.sparta.logistics.hubcompany.infrastructure.config;
 
+import com.sparta.logistics.hubcompany.domain.Hub;
+import com.sparta.logistics.hubcompany.infrastructure.cache.adaptor.HubCacheAdapter;
+import com.sparta.logistics.hubcompany.infrastructure.cache.dto.HubCache;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.entity.HubEntity;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.repository.HubRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +17,12 @@ import java.util.List;
 public class HubDataLoader implements CommandLineRunner {
 
     private final HubRepository hubRepository;
+    private final HubCacheAdapter hubCacheAdapter;
 
     @Override
     public void run(String... args) {
         if (hubRepository.count() == 0) {
-            hubRepository.saveAll(List.of(
+            List<HubEntity> hubs = List.of(
                     HubEntity.builder()
                             .name("서울특별시 센터")
                             .address("서울특별시 송파구 송파대로 55")
@@ -138,7 +142,18 @@ public class HubDataLoader implements CommandLineRunner {
                             .longitude(new BigDecimal("128.682355"))
                             .userId(17L)
                             .build()
-            ));
+            );
+
+            hubRepository.saveAll(hubs);
+
+            hubs.forEach(hub -> hubCacheAdapter.save(new Hub(
+                    hub.getHubId(),
+                    hub.getName(),
+                    hub.getAddress(),
+                    hub.getLatitude(),
+                    hub.getLongitude(),
+                    hub.getUserId()
+            )));
         }
     }
 }
