@@ -10,13 +10,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CompanyDetailClientResponse {
 
-    private Long id;
     private Long hubId;
-    private String name;
-    private String type;
-    private String address;
+    private String hubName;
+    private String hubAddress;
+    private Long companyId;
+    private String companyName;
+    private String companyType;
 
     public Company toDomain() {
-        return new Company(id, hubId, name, type);
+        return new Company(companyId, hubId, companyName, companyType);
     }
 }

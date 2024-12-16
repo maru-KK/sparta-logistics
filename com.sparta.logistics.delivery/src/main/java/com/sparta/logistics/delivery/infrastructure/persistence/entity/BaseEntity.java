@@ -31,7 +31,7 @@ public class BaseEntity {
     private LocalDateTime updatedAt;
 
     @LastModifiedBy
-    private String updatedBy;
+    private Long updatedBy;
 
     private LocalDateTime deletedAt;
 
@@ -41,5 +41,9 @@ public class BaseEntity {
         this.isDeleted = true;
         this.deletedAt = LocalDateTime.now();
         this.deletedBy = deletedBy;
+    }
+
+    public void setUpdatedBy(Long userId) {
+        this.updatedBy = userId;
     }
 }

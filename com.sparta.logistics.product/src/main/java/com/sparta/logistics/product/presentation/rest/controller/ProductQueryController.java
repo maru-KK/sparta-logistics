@@ -3,6 +3,7 @@ package com.sparta.logistics.product.presentation.rest.controller;
 import static com.sparta.logistics.product.presentation.rest.exception.ErrorMessages.*;
 
 import com.sparta.logistics.product.domain.Product;
+import com.sparta.logistics.product.infrastructure.cache.adapter.ProductCacheAdapter;
 import com.sparta.logistics.product.presentation.rest.dto.query.ProductDetailResponse;
 import com.sparta.logistics.product.presentation.rest.util.ApiResponse;
 import com.sparta.logistics.product.presentation.rest.util.ApiResponse.Success;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductQueryController {
 
     private final ProductQueryAdapter productQueryAdapter;
+    private final ProductCacheAdapter productCacheAdapter;
 
     @GetMapping("/{id}")
     public ResponseEntity<Success<ProductDetailResponse>> findOne(
@@ -32,6 +34,8 @@ public class ProductQueryController {
     ) {
         Product product = productQueryAdapter.findById(productId).orElseThrow(() ->
             new IllegalArgumentException(String.format(PRODUCT_NOT_FOUND.getMessage(), productId)));
+        productCacheAdapter.save(product);
+
         ProductDetailResponse response = ProductDetailResponse.from(product);
 
         return ApiResponse.success(response, HttpStatus.OK);

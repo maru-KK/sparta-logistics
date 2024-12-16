@@ -60,12 +60,8 @@ public class ProductService {
 
     public Product changeProductQuantity(ProductForUpdateQuantity productForUpdate, Long updatedBy) {
         return handleException(() -> {
-
-            Company company = companyService.validateAndGetSupplierCompany(updatedBy);
-            Product product = productQueryOutputPort.findById(productForUpdate.getId())
+            productQueryOutputPort.findById(productForUpdate.getId())
                 .orElseThrow(() -> new ProductLogicException("유효하지 않은 상품 식별자"));
-            product.validateMatchedCompany(company);
-
             return productOutputPort.changeProductQuantity(productForUpdate, updatedBy);
 
         }, ProductUpdateFailureException::new);

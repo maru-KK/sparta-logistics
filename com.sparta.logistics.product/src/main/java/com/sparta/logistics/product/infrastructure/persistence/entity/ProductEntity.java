@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,7 +40,11 @@ public class ProductEntity extends BaseEntity {
     @Column(nullable = false)
     private Integer quantity;
 
-    public ProductEntity(Long id, Long hubId, Long companyId, String name, Integer quantity, Long createdBy) {
+    @Version
+    @Column(nullable = false)
+    private Long version;
+
+    public ProductEntity(Long createdBy, Long id, Long hubId, Long companyId, String name, Integer quantity) {
         super();
         super.createdFrom(createdBy);
 
@@ -58,12 +63,12 @@ public class ProductEntity extends BaseEntity {
 
     public static ProductEntity of(ProductForCreate product, Company company) {
         return new ProductEntity(
+            product.getCreatedBy(),
             null,
             company.getHubId(),
             company.getId(),
             product.getName(),
-            product.getQuantity(),
-            product.getCreatedBy()
+            product.getQuantity()
         );
     }
 
@@ -77,15 +82,12 @@ public class ProductEntity extends BaseEntity {
         return this;
     }
 
-    public ProductEntity changeQuantity(ProductForUpdateQuantity product, Long updatedBy) {
-        System.out.println(product);
+    public ProductEntity changeQuantity(ProductForUpdateQuantity product, Long updatedBy) {;
         if (product.isDecrease()) {
-            System.out.println("감소");
             decreaseQuantity(product.getChangedCount());
             super.updatedFrom(updatedBy);
             return this;
         }
-        System.out.println("증가");
         this.quantity += product.getChangedCount();
         super.updatedFrom(updatedBy);
         return this;

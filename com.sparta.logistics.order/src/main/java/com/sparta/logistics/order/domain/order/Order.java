@@ -1,5 +1,6 @@
 package com.sparta.logistics.order.domain.order;
 
+import com.sparta.logistics.order.domain.event.order.OrderCreateEvent;
 import com.sparta.logistics.order.domain.order.vo.OrderStatus;
 import java.time.LocalDateTime;
 
@@ -32,6 +33,22 @@ public class Order {
         this.requestMessage = requestMessage;
         this.deliveryLimitedAt = deliveryLimitedAt;
         this.status = status;
+    }
+
+    public OrderCreateEvent createEvent() {
+        return new OrderCreateEvent(id, productId, quantity, orderedBy);
+    }
+
+    public Order inDeliver() {
+        if (isAvailableTransit()) {
+            this.status = OrderStatus.IN_TRANSIT;
+            return this;
+        }
+        throw new IllegalArgumentException("배송 상태로 변경할 수 없습니다.");
+    }
+
+    public boolean isAvailableTransit() {
+        return status == OrderStatus.ACCEPTED;
     }
 
     public Long getId() {
