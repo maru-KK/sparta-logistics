@@ -61,4 +61,8 @@ public class DeliveryLogEntity extends BaseEntity {
                 .actualDistance(hubRouteInfo.actualDistance())
                 .build();
     }
+
+    public void setStatus(DeliveryLogStatus status) {
+        this.status = status;
+    }
 }

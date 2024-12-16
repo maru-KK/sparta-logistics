@@ -1,5 +1,6 @@
 package com.sparta.logistics.delivery.infrastructure.persistence.adapter;
 
+import com.sparta.logistics.delivery.application.dto.DeliveryStatusUpdateRequestDto;
 import com.sparta.logistics.delivery.application.output.DeliveryLogPort;
 import com.sparta.logistics.delivery.domain.Delivery;
 import com.sparta.logistics.delivery.domain.DeliveryPerson;
@@ -22,5 +23,15 @@ public class DeliveryLogAdapter implements DeliveryLogPort {
         DeliveryLogEntity deliveryLogEntity = DeliveryLogEntity.of(delivery, hubRouteInfo, hubDeliveryPerson);
 
         deliveryLogRepository.save(deliveryLogEntity);
+    }
+
+    @Override
+    public void update(DeliveryStatusUpdateRequestDto.DeliveryLogStatusDto request, Long userId) {
+        DeliveryLogEntity deliveryLogEntity = deliveryLogRepository.findByDeliveryId(request.deliveryId());
+        if (!deliveryLogEntity.getDeliveryPersonId().equals(userId)) {
+            throw new IllegalArgumentException("해당 허브 배송 담당자가 아닙니다.");
+        }
+
+        deliveryLogEntity.setStatus(request.status());
     }
 }

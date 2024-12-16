@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface DeliveryLogRepository extends JpaRepository<DeliveryLogEntity, Long> {
+    DeliveryLogEntity findByDeliveryId(Long deliveryId);
 }
