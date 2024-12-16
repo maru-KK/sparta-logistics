@@ -1,6 +1,8 @@
 package com.sparta.logistics.hubroute.appliation.service;
 
 import com.sparta.logistics.hubroute.appliation.dto.HubRouteResponseDto;
+import com.sparta.logistics.hubroute.domain.HubRoute;
+import com.sparta.logistics.hubroute.infrastructure.cache.adapter.HubRouteCacheAdapter;
 import com.sparta.logistics.hubroute.infrastructure.client.HubCompanyClient;
 import com.sparta.logistics.hubroute.infrastructure.dto.HubDto;
 import com.sparta.logistics.hubroute.infrastructure.persistence.entity.HubRouteEntity;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +27,7 @@ public class HubRouteServiceImpl implements HubRouteService {
     private final HubRouteRepository hubRouteRepository;
     private final HubCompanyClient hubCompanyClient;
     private final RestTemplate restTemplate;
+    private final HubRouteCacheAdapter hubRouteCacheAdapter;
 
     @Value("${service.api.key}")
     private String apiKey;
@@ -43,10 +47,10 @@ public class HubRouteServiceImpl implements HubRouteService {
     }
 
     @Override
-    public HubRouteEntity calculateAndSaveRoute(Long originHubId, Long destinationHubId) {
-        HubRouteEntity existingRoute = hubRouteRepository.findByOriginHubIdAndDestinationHubId(originHubId, destinationHubId).orElse(null);
-        if (existingRoute != null) {
-            return existingRoute;
+    public void calculateAndSaveRoute(Long originHubId, Long destinationHubId) {
+        Optional<HubRoute> cachedRoute = hubRouteCacheAdapter.findByOriginAndDestination(originHubId, destinationHubId);
+        if (cachedRoute.isPresent()) {
+            return;
         }
 
         HubDto originHub = hubCompanyClient.getHubById(originHubId);
@@ -65,7 +69,10 @@ public class HubRouteServiceImpl implements HubRouteService {
                 .actualDuration((int) duration)
                 .build();
 
-        return hubRouteRepository.save(hubRouteEntity);
+        hubRouteRepository.save(hubRouteEntity);
+
+        HubRoute hubRoute = new HubRoute(hubRouteEntity.getHubRouteId(), originHubId, destinationHubId, (int) duration, distance);
+        hubRouteCacheAdapter.save(hubRoute);
     }
 
     private String callApi(String url, Double originLat, Double originLon, Double destLat, Double destLon) {
@@ -81,8 +88,7 @@ public class HubRouteServiceImpl implements HubRouteService {
             JSONObject properties = features.getJSONObject(0).getJSONObject("properties");
             return properties.getJSONArray("segments").getJSONObject(0).getDouble("distance");
         } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
+            throw new IllegalArgumentException("Failed to extract distance from GeoJSON response", e);
         }
     }
 
@@ -93,8 +99,7 @@ public class HubRouteServiceImpl implements HubRouteService {
             JSONObject properties = features.getJSONObject(0).getJSONObject("properties");
             return properties.getJSONArray("segments").getJSONObject(0).getDouble("duration");
         } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
+            throw new IllegalArgumentException("Failed to extract duration from GeoJSON response", e);
         }
     }
 

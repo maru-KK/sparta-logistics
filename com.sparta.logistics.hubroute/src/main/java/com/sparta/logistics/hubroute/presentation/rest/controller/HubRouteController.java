@@ -2,11 +2,15 @@ package com.sparta.logistics.hubroute.presentation.rest.controller;
 
 import com.sparta.logistics.hubroute.appliation.dto.HubRouteResponseDto;
 import com.sparta.logistics.hubroute.appliation.service.HubRouteService;
+import com.sparta.logistics.hubroute.domain.HubRoute;
+import com.sparta.logistics.hubroute.infrastructure.cache.adapter.HubRouteCacheAdapter;
+import com.sparta.logistics.hubroute.infrastructure.persistence.entity.HubRouteEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,6 +18,7 @@ import java.util.List;
 public class HubRouteController {
 
     private final HubRouteService hubRouteService;
+    private final HubRouteCacheAdapter hubRouteCacheAdapter;
 
     @PostMapping("/calculate-routes")
     public ResponseEntity<String> calculateAllRoutes() {
@@ -23,7 +28,12 @@ public class HubRouteController {
 
     @GetMapping("/{hubRouteId}")
     public ResponseEntity<HubRouteResponseDto> getRouteById(@PathVariable("hubRouteId") Long hubRouteId) {
+        Optional<HubRoute> cachedRoute = hubRouteCacheAdapter.findById(hubRouteId);
+        if (cachedRoute.isPresent()) {
+            return ResponseEntity.ok(cachedRoute.get().toDto());
+        }
         HubRouteResponseDto hubRoute = hubRouteService.getRouteById(hubRouteId);
+        hubRouteCacheAdapter.save(hubRoute.toDomain());
         return ResponseEntity.ok(hubRoute);
     }
 
