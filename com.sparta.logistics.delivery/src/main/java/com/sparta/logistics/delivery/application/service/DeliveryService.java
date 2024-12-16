@@ -1,6 +1,7 @@
 package com.sparta.logistics.delivery.application.service;
 
 import com.sparta.logistics.delivery.application.dto.DeliveryCreateRequestDto;
+import com.sparta.logistics.delivery.application.output.CompanyDeliveryRoutePort;
 import com.sparta.logistics.delivery.application.output.DeliveryLogPort;
 import com.sparta.logistics.delivery.application.output.DeliveryPort;
 import com.sparta.logistics.delivery.domain.Delivery;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DeliveryService {
     private final DeliveryPort deliveryPort;
     private final DeliveryLogPort deliveryLogPort;
+    private final CompanyDeliveryRoutePort companyDeliveryRoutePort;
     private final AuthPort authPort;
     private final HubCompanyPort hubCompanyPort;
     private final DeliveryPersonService deliveryPersonService;
@@ -56,6 +58,8 @@ public class DeliveryService {
         // 허브 루트 정보 조회
         HubRouteResponseDto hubRouteInfo = hubRoutePort.getRouteByOriginAndDestination(supplyCompany.hub().getHubId(), consumeCompany.hub().getHubId());
         deliveryLogPort.save(delivery, hubRouteInfo, nextHubDeliveryPerson);
+
+        companyDeliveryRoutePort.save(delivery.deliveryId(), nextCompanyDeliveryPerson.deliveryPersonId(), consumeCompany);
 
         UserDetailResponse deliveryPersonInfo = authPort.findUser(nextCompanyDeliveryPerson.userId());
        ProductDetailResponse productDetailResponse = productPort.findOne(requestDto.productId());
