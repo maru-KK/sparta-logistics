@@ -8,9 +8,9 @@
 
 |팀원명|역할|
 |:---:|:---:|
-|<img src="https://avatars.githubusercontent.com/u/96504592?v=4" width="150px;" alt=""/><br /><sub><b>정현수</b></sub></a><br />|서비스 디스커버리 및 Gateway 구축, `인증`/`인가`/`주문`/`상품` 서비스 구현 <br/> Kafka, RabbitMQ 비동기 통신 환경 구축, Redis 캐싱 환경 구축 <br/> slack API 메시지 발송 기능 구현, DockerCompose 실행 환경 구축, 서버 아키텍처 작성|
-|<img src="https://avatars.githubusercontent.com/u/112970256?v=4" width="150px;" alt=""/><br /><sub><b>손동필</b></sub></a><br />|`배송`/`배송 담당자`/`배송 경로` 서비스 구현, <br/> Kafka 비동기 통신, Redis 활용 배송 담당자 순차 배정 기능 구현|
-|<img src="https://avatars.githubusercontent.com/u/110008586?v=4" width="150px;" alt=""/><br /><sub><b>김민주</b></sub></a><br />|`허브`/`허브 간 이동정보`/`업체` 서비스 구현, <br/> Redis 캐싱 환경 구축, OpenRouteService API 및 Gemini AI API 연동|
+|<img src="https://avatars.githubusercontent.com/u/96504592?v=4" width="150px;" alt=""/><br /><sub><b>[정현수](https://github.com/hyunsb)</b></sub></a><br />|서비스 디스커버리 및 Gateway 구축, `인증`/`인가`/`주문`/`상품` 서비스 구현 <br/> Kafka, RabbitMQ 비동기 통신 환경 구축, Redis 캐싱 환경 구축 <br/> slack API 메시지 발송 기능 구현, DockerCompose 실행 환경 구축, 서버 아키텍처 작성|
+|<img src="https://avatars.githubusercontent.com/u/112970256?v=4" width="150px;" alt=""/><br /><sub><b>[손동필](https://github.com/sdongpil)</b></sub></a><br />|`배송`/`배송 담당자`/`배송 경로` 서비스 구현, <br/> Kafka 비동기 통신, Redis 활용 배송 담당자 순차 배정 기능 구현|
+|<img src="https://avatars.githubusercontent.com/u/110008586?v=4" width="150px;" alt=""/><br /><sub><b>[김민주](https://github.com/kgrace2366)</b></sub></a><br />|`허브`/`허브 간 이동정보`/`업체` 서비스 구현, <br/> Redis 캐싱 환경 구축, OpenRouteService API 및 Gemini AI API 연동|
 
 <br/><br/>
 
