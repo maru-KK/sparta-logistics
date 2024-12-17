@@ -1,11 +1,12 @@
 package com.sparta.logistics.infra.application.util;
 
+import com.sparta.logistics.infra.domain.ai.Ai;
 import com.sparta.logistics.infra.persistence.rest.dto.InfraRequestDto;
 import lombok.RequiredArgsConstructor;
 
 public class AIUtil {
 
-    public static String createSlackMessage(InfraRequestDto deliveryData, String aiResponse) {
+    public static String createSlackMessage(Ai ai, String aiResponse) {
         try {
             return String.format(
                     "주문 번호: %s\n" +
@@ -17,12 +18,12 @@ public class AIUtil {
                             "도착지: %s\n" +
                             "배송 담당자: %s / %s\n\n" +
                             "위 내용을 바탕으로 도출된 최종 발송 시한은 %s 입니다.",
-                    deliveryData.getOrderId(), deliveryData.getUserName(),
-                    deliveryData.getProductName(), deliveryData.getProductQuantity(),
-                    deliveryData.getRequest(),
-                    deliveryData.getOriginHub(), deliveryData.getDestinationHub(),
-                    deliveryData.getCompanyAddress(),
-                    deliveryData.getDeliveryPersonName(), deliveryData.getSnsAccount(),
+                    ai.getOrderId(), ai.getUserName(),
+                    ai.getProductName(), ai.getProductQuantity(),
+                    ai.getRequest(),
+                    ai.getOriginHub(), ai.getDestinationHub(),
+                    ai.getCompanyAddress(),
+                    ai.getDeliveryPersonName(), ai.getSnsAccount(),
                     aiResponse
             );
         } catch (Exception e) {
