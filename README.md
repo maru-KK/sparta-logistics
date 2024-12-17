@@ -10,7 +10,7 @@
 |:---:|:---:|
 |<img src="https://avatars.githubusercontent.com/u/96504592?v=4" width="150px;" alt=""/><br /><sub><b>정현수</b></sub></a><br />|서비스 디스커버리 및 Gateway 구축, `인증`/`인가`/`주문`/`상품` 서비스 구현, <br/> Kafka, RabbitMQ 비동기 통신 환경 구축, Redis 캐싱 환경 구축, slack API 메시지 발송 기능 구현|
 |<img src="https://avatars.githubusercontent.com/u/112970256?v=4" width="150px;" alt=""/><br /><sub><b>손동필</b></sub></a><br />||
-|<img src="https://avatars.githubusercontent.com/u/110008586?v=4" width="150px;" alt=""/><br /><sub><b>김민주</b></sub></a><br />|`허브`/`허브 간 이동경로`/`업체` 서비스, Redis 캐싱 환경 구축, OpenRouteService API 및 Gemini AI API 연동|
+|<img src="https://avatars.githubusercontent.com/u/110008586?v=4" width="150px;" alt=""/><br /><sub><b>김민주</b></sub></a><br />|`허브`/`허브 간 이동정보`/`업체` 서비스 구현, <br/> Redis 캐싱 환경 구축, OpenRouteService API 및 Gemini AI API 연동|
 
 <br/><br/>
 
@@ -62,9 +62,9 @@
 
 ### 📦 Hub-Route Service
 
-> * 허브 간 이동경로 생성 및 조회
-> * OpenRouteService API를 활용한 경로 탐색
-> * 허브 간 이동경로 캐싱
+> * 허브 간 이동 정보 생성 및 조회
+> * OpenRouteService API를 활용한 허브 간 이동 경로 탐색
+> * 허브 간 이동 경로 캐싱
 
 
 ### 📦 Infra Service
