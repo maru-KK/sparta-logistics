@@ -39,7 +39,7 @@ public class HubQueryDslRepository {
                         hubEntity.isDeleted.isFalse(),
                         filterCondition
                 )
-                .orderBy(getHubSpecifier(searchCondition.getSort()))
+                .orderBy(getOrderSpecifier(searchCondition.getSort()))
                 .offset(pageRequest.getOffset())
                 .limit(pageRequest.getPageSize())
                 .fetch();
@@ -68,7 +68,7 @@ public class HubQueryDslRepository {
                 .or(hubEntity.address.containsIgnoreCase(keyword));
     }
 
-    private com.querydsl.core.types.OrderSpecifier<?> getHubSpecifier(Sort sort) {
+    private com.querydsl.core.types.OrderSpecifier<?> getOrderSpecifier(Sort sort) {
         if (sort instanceof HubSort hubSort) {
             String sortType = hubSort.getSortType();
             boolean isAsc = hubSort.isAsc();

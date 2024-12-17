@@ -1,7 +1,7 @@
 package com.sparta.logistics.hubcompany.infrastructure.persistence.search;
 
 
-import com.sparta.logistics.hubcompany.infrastructure.persistence.search.sort.HubSort;
+import com.sparta.logistics.hubcompany.infrastructure.persistence.search.sort.CompanySort;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.search.sort.Sort;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,6 @@ import java.util.Objects;
 public class CompanySearchCondition {
 
     private static final int DEFAULT_PAGE = 0;
-
     private static final int DEFAULT_SIZE = 10;
     private static final List<Integer> AVAILABLE_SIZES = List.of(10, 30, 50);
 
@@ -27,21 +26,16 @@ public class CompanySearchCondition {
     private final Sort sort;
 
     // filter option
-    private final Long hubId;
-    private final Long companyId;
     private final String keyword;
 
     public static CompanySearchCondition of(
-        String requestPage, String requestSize, String requestSort,
-        String requestHubId, String requestCompanyId, String requestKeyword
+            String requestPage, String requestSize, String requestSort, String requestKeyword
     ) {
         int page = parseIntPageOrDefault(requestPage);
         int size = parseIntSizeOrDefault(requestSize);
-        Sort sort = HubSort.valueOf(requestSort);
-        Long hubId = parseLongOrNull(requestHubId);
-        Long companyId = parseLongOrNull(requestCompanyId);
+        Sort sort = CompanySort.valueOf(requestSort);
 
-        return new CompanySearchCondition(page, size, sort, hubId, companyId, requestKeyword);
+        return new CompanySearchCondition(page, size, sort, requestKeyword);
     }
 
     private static int parseIntPageOrDefault(String requestPage) {
@@ -64,14 +58,6 @@ public class CompanySearchCondition {
 
         } catch (NumberFormatException exception) {
             return DEFAULT_SIZE;
-        }
-    }
-
-    private static Long parseLongOrNull(String value) {
-        try {
-            return Long.parseLong(value);
-        } catch (NumberFormatException exception) {
-            return null;
         }
     }
 }

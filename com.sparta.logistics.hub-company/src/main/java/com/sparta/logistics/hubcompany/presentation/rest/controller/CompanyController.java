@@ -5,10 +5,16 @@ import com.sparta.logistics.hubcompany.application.dto.CompanyResponseDto;
 import com.sparta.logistics.hubcompany.application.dto.HubCompanyResponseDto;
 import com.sparta.logistics.hubcompany.application.dto.HubResponseDto;
 import com.sparta.logistics.hubcompany.application.service.CompanyService;
+import com.sparta.logistics.hubcompany.domain.Company;
+import com.sparta.logistics.hubcompany.domain.Hub;
+import com.sparta.logistics.hubcompany.infrastructure.persistence.adaptor.CompanyQueryAdaptor;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.entity.CompanyEntity;
+import com.sparta.logistics.hubcompany.infrastructure.persistence.search.CompanySearchCondition;
+import com.sparta.logistics.hubcompany.infrastructure.persistence.search.HubSearchCondition;
 import com.sparta.logistics.hubcompany.presentation.rest.dto.security.Actor;
 import com.sparta.logistics.hubcompany.presentation.util.actor.LoginActor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +27,7 @@ import java.util.List;
 public class CompanyController {
 
     private final CompanyService companyService;
+    private final CompanyQueryAdaptor companyQueryAdaptor;
 
     @PostMapping
     public ResponseEntity<String> createCompany(@RequestBody CompanyRequestDto request,
@@ -57,6 +64,25 @@ public class CompanyController {
     public ResponseEntity<List<HubCompanyResponseDto>> getHubsAndCompaniesByUserId(@PathVariable("user_id") Long userId) {
         List<HubCompanyResponseDto> response = companyService.getHubsAndCompaniesByUserId(userId);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<Company>> search(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "sort", defaultValue = "created_at") String sort,
+            @RequestParam(value = "filter", required = false) String keyword
+    ) {
+        CompanySearchCondition searchCondition = CompanySearchCondition.of(
+                String.valueOf(page),
+                String.valueOf(size),
+                sort,
+                keyword
+        );
+
+        Page<Company> result = companyQueryAdaptor.search(searchCondition);
+
+        return ResponseEntity.ok(result);
     }
 
 }

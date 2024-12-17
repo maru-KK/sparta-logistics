@@ -1,5 +1,6 @@
 package com.sparta.logistics.hubcompany.infrastructure.persistence.entity;
 
+import com.sparta.logistics.hubcompany.domain.Company;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,4 +35,14 @@ public class CompanyEntity extends Timestamped {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
+    public Company toDomain(){
+        return new Company(
+                this.companyId,
+                this.name,
+                this.type,
+                this.address,
+                this.hub,
+                this.userId
+        );
+    }
 }
