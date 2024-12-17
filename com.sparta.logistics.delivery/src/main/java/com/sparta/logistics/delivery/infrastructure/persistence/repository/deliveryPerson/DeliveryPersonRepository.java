@@ -18,7 +18,7 @@ public interface DeliveryPersonRepository extends JpaRepository<DeliveryPersonEn
     @Query("SELECT d FROM p_delivery_person d " +
             "WHERE d.isDeleted = false " +
             "AND d.type = :type " +
-            "AND d.status = :status " +
+            "AND d.status != :status " +
             "ORDER BY d.sequence ASC")
     List<DeliveryPersonEntity> findByHubDeliveryPerson(@Param("type") DeliveryPersonType type, @Param("status") DeliveryPersonStatus status);
 
@@ -28,7 +28,7 @@ public interface DeliveryPersonRepository extends JpaRepository<DeliveryPersonEn
             "WHERE h.hubId = :hubId " +
             "AND d.isDeleted = false " +
             "AND d.type = :type " +
-            "AND d.status = :status " +
+            "AND d.status != :status " +
             "ORDER BY d.sequence ASC")
     List<DeliveryPersonEntity> findByCompanyDeliveryPerson(@Param("type") DeliveryPersonType type, @Param("status") DeliveryPersonStatus status, @Param("hubId") Long hubId);
 
