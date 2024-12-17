@@ -8,7 +8,7 @@
 
 |팀원명|역할|
 |:---:|:---:|
-|<img src="https://avatars.githubusercontent.com/u/96504592?v=4" width="150px;" alt=""/><br /><sub><b>정현수</b></sub></a><br />|서비스 디스커버리 및 Gateway 구축, `인증`/`인가`/`주문`/`상품` 서비스, Kafka, RabbitMQ 비동기 통신 환경 구축, Redis 캐싱, slack 연동|
+|<img src="https://avatars.githubusercontent.com/u/96504592?v=4" width="150px;" alt=""/><br /><sub><b>정현수</b></sub></a><br />|서비스 디스커버리 및 Gateway 구축, `인증`/`인가`/`주문`/`상품` 서비스 구현, <br/> Kafka, RabbitMQ 비동기 통신 환경 구축, Redis 캐싱 환경 구축, slack API 메시지 발송 기능 구현|
 |<img src="https://avatars.githubusercontent.com/u/112970256?v=4" width="150px;" alt=""/><br /><sub><b>손동필</b></sub></a><br />||
 |<img src="https://avatars.githubusercontent.com/u/110008586?v=4" width="150px;" alt=""/><br /><sub><b>김민주</b></sub></a><br />||
 
@@ -30,17 +30,22 @@
 
 ### 🛡 Auth Service
 
-> * 기능입니다.
+> * 로그인 및 회원가입
+> * JWT 토큰 발급
+> * 유저 데이터 관리
 
 
 ### 📦 Order Service
 
-> * 기능입니다.
+> * 주문 생성
+> * 조회 및 검색 (필터링, 정렬)
+> * Kafka 비동기 통신 환경 구축
 
 
 ### 📦 Product Service
 
-> * 기능입니다.
+> * 상품 생성 및 재고 수정
+> * 조회 및 검색 (필터링, 정렬)
 
 
 ### 📦 Delivery Service
@@ -60,7 +65,8 @@
 
 ### 📦 Infra Service
 
-> * 기능입니다.
+> * Gemini AI API를 활용한 배송 출발 마감 시간 계산
+> * Slack API를 활용한 주문 및 배달 메시지 발송
 
 
 <br/><br/>
