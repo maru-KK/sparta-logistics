@@ -6,6 +6,8 @@ import com.sparta.logistics.hubcompany.application.dto.HubCompanyResponseDto;
 import com.sparta.logistics.hubcompany.application.dto.HubResponseDto;
 import com.sparta.logistics.hubcompany.application.service.CompanyService;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.entity.CompanyEntity;
+import com.sparta.logistics.hubcompany.presentation.rest.dto.security.Actor;
+import com.sparta.logistics.hubcompany.presentation.util.actor.LoginActor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +24,8 @@ public class CompanyController {
 
     @PostMapping
     public ResponseEntity<String> createCompany(@RequestBody CompanyRequestDto request,
-                                                @RequestHeader("X-User-Id") Long userId,
-                                                @RequestHeader("X-Role") String role) {
-        if (!"COMPANY".equals(role) && !"MASTER".equals(role)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("업체 생성 권한이 없습니다.");
-        }
-
-        CompanyResponseDto companyResponse = companyService.createCompany(request, userId);
+                                                @LoginActor Actor actor) {
+        CompanyResponseDto companyResponse = companyService.createCompany(request);
         Long companyId = companyResponse.getCompanyId();
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -51,14 +47,9 @@ public class CompanyController {
     @PatchMapping("/{companyId}")
     public ResponseEntity<String> updateCompany(@PathVariable Long companyId,
                                                 @RequestBody CompanyRequestDto request,
-                                                @RequestHeader("X-User-Id") Long userId,
-                                                @RequestHeader("X-Role") String role) {
-        if (!"COMPANY".equals(role) && !"MASTER".equals(role)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("업체 수정 권한이 없습니다.");
-        }
+                                                @LoginActor Actor actor) {
 
-        companyService.updateCompany(companyId, request, userId);
+        companyService.updateCompany(companyId, request);
         return ResponseEntity.ok("Company updated successfully.");
     }
 

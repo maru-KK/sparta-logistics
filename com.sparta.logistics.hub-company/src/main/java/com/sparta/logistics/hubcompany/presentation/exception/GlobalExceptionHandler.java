@@ -1,6 +1,7 @@
 package com.sparta.logistics.hubcompany.presentation.exception;
 
 import com.sparta.logistics.hubcompany.presentation.exception.exceptions.DuplicateResourceException;
+import com.sparta.logistics.hubcompany.presentation.exception.exceptions.InvalidAccessResourceException;
 import com.sparta.logistics.hubcompany.presentation.exception.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,5 +34,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<String> handleDuplicateResourceException(DuplicateResourceException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidAccessResourceException.class)
+    public ResponseEntity<String> handleInvalidAccessResourceException(InvalidAccessResourceException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
 }
