@@ -1,6 +1,7 @@
 package com.sparta.logistics.hubcompany.presentation.exception;
 
 import com.sparta.logistics.hubcompany.presentation.exception.exceptions.DuplicateResourceException;
+import com.sparta.logistics.hubcompany.presentation.exception.exceptions.InvalidAccessResourceException;
 import com.sparta.logistics.hubcompany.presentation.exception.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,8 +36,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException ex) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+    @ExceptionHandler(InvalidAccessResourceException.class)
+    public ResponseEntity<String> handleInvalidAccessResourceException(InvalidAccessResourceException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
 }

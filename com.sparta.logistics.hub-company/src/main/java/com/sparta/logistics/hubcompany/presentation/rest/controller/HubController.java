@@ -44,7 +44,7 @@ public class HubController {
     @PostMapping
     public ResponseEntity<String> createHub(@RequestBody HubCreationRequestDto request,
                                             @LoginActor Actor actor) {
-        HubResponseDto hubResponse = hubService.createHub(request, actor);
+        HubResponseDto hubResponse = hubService.createHub(request);
         Long hubId = hubResponse.getHubId();
 
         return ResponseEntity.status(HttpStatus.CREATED)

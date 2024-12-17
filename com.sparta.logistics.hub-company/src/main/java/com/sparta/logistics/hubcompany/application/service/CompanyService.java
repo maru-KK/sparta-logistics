@@ -10,9 +10,9 @@ import com.sparta.logistics.hubcompany.presentation.rest.dto.security.Actor;
 import java.util.List;
 
 public interface CompanyService {
-    CompanyResponseDto createCompany(CompanyRequestDto request, Actor actor);
+    CompanyResponseDto createCompany(CompanyRequestDto request);
     CompanyEntity getCompanyById(Long companyId);
     HubResponseDto getHubByCompanyId(Long companyId);
-    void updateCompany(Long companyId, CompanyRequestDto request, Actor actor);
+    void updateCompany(Long companyId, CompanyRequestDto request);
     List<HubCompanyResponseDto> getHubsAndCompaniesByUserId(Long userId);
 }

@@ -10,5 +10,5 @@ import java.util.List;
 public interface HubService {
     HubEntity getHubById(Long hubId);
     List<HubResponseDto> getAllHubs();
-    HubResponseDto createHub(HubCreationRequestDto request, Actor actor);
+    HubResponseDto createHub(HubCreationRequestDto request);
 }

@@ -2,18 +2,14 @@ package com.sparta.logistics.hubcompany.application.service;
 
 import com.sparta.logistics.hubcompany.application.dto.HubCreationRequestDto;
 import com.sparta.logistics.hubcompany.application.dto.HubResponseDto;
-import com.sparta.logistics.hubcompany.domain.Hub;
 import com.sparta.logistics.hubcompany.infrastructure.auth.AuthPort;
 import com.sparta.logistics.hubcompany.infrastructure.auth.dto.UserDetailResponse;
-import com.sparta.logistics.hubcompany.infrastructure.cache.adaptor.HubCacheAdapter;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.entity.HubEntity;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.repository.HubRepository;
 import com.sparta.logistics.hubcompany.presentation.exception.exceptions.InvalidAccessResourceException;
 import com.sparta.logistics.hubcompany.presentation.exception.exceptions.ResourceNotFoundException;
-import com.sparta.logistics.hubcompany.presentation.rest.dto.security.Actor;
 import com.sparta.logistics.hubcompany.presentation.rest.dto.security.Role;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,9 +37,12 @@ public class HubServiceImpl implements HubService {
     }
 
     @Override
-    public HubResponseDto createHub(HubCreationRequestDto request, Actor actor) {
+    public HubResponseDto createHub(HubCreationRequestDto request) {
         UserDetailResponse user = authPort.findUser(request.getUserId());
-        validateCreatePermission(actor);
+
+        if (Role.valueOf(user.role()) != Role.MASTER) {
+            throw new InvalidAccessResourceException("허브 생성 권한이 없습니다.");
+        }
 
         HubEntity hubEntity = HubEntity.builder()
                 .name(request.getName())
@@ -56,14 +55,6 @@ public class HubServiceImpl implements HubService {
         HubEntity savedHub = hubRepository.save(hubEntity);
 
         return new HubResponseDto(savedHub);
-    }
-
-    private void validateCreatePermission(Actor actor) {
-        if (actor.role() == Role.MASTER) {
-            return;
-        } else {
-            throw new InvalidAccessResourceException("허브 생성 권한이 없습니다.");
-        }
     }
 
 }

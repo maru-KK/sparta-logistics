@@ -25,7 +25,7 @@ public class CompanyController {
     @PostMapping
     public ResponseEntity<String> createCompany(@RequestBody CompanyRequestDto request,
                                                 @LoginActor Actor actor) {
-        CompanyResponseDto companyResponse = companyService.createCompany(request, actor);
+        CompanyResponseDto companyResponse = companyService.createCompany(request);
         Long companyId = companyResponse.getCompanyId();
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -49,7 +49,7 @@ public class CompanyController {
                                                 @RequestBody CompanyRequestDto request,
                                                 @LoginActor Actor actor) {
 
-        companyService.updateCompany(companyId, request, actor);
+        companyService.updateCompany(companyId, request);
         return ResponseEntity.ok("Company updated successfully.");
     }
 

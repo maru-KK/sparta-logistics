@@ -1,5 +1,6 @@
 package com.sparta.logistics.hubroute.presentation.exception;
 
+import com.sparta.logistics.hubroute.presentation.exception.exceptions.InvalidAccessResourceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -30,5 +31,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(com.sparta.logistics.hubroute.presentation.exception.exceptions.DuplicateResourceException.class)
     public ResponseEntity<String> handleDuplicateResourceException(com.sparta.logistics.hubroute.presentation.exception.exceptions.DuplicateResourceException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidAccessResourceException.class)
+    public ResponseEntity<String> handleInvalidAccessResourceException(InvalidAccessResourceException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
 }
