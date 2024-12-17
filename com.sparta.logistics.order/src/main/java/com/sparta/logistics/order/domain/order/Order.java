@@ -36,7 +36,7 @@ public class Order {
     }
 
     public OrderCreateEvent createEvent() {
-        return new OrderCreateEvent(id, productId, quantity, orderedBy);
+        return new OrderCreateEvent(id, productId, quantity, orderedBy, consumeCompanyId, supplyCompanyId, requestMessage, deliveryLimitedAt);
     }
 
     public Order inDeliver() {
