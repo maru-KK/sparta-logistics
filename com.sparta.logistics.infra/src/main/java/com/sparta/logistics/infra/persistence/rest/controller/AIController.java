@@ -18,9 +18,9 @@ public class AIController {
 
     private final AIService aiService;
 
-    @PostMapping
-    public ResponseEntity<AIEntity> generateResponse(@RequestBody InfraRequestDto infraRequestDto) {
-        AIEntity aiEntity = aiService.generateResponse(infraRequestDto);
-        return ResponseEntity.ok(aiEntity);
-    }
+//    @PostMapping
+//    public ResponseEntity<AIEntity> generateResponse(@RequestBody InfraRequestDto infraRequestDto) {
+//        AIEntity aiEntity = aiService.generateResponse(infraRequestDto.toDomain());
+//        return ResponseEntity.ok(aiEntity);
+//    }
 }

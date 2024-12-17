@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.logistics.infra.application.util.AIUtil;
+import com.sparta.logistics.infra.domain.ai.Ai;
 import com.sparta.logistics.infra.domain.slack.SlackToSendMessage;
 import com.sparta.logistics.infra.infrastructure.persistence.entity.AIEntity;
 import com.sparta.logistics.infra.infrastructure.persistence.repository.AIRepository;
@@ -36,9 +37,9 @@ public class AIService {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final SlackMessageAdapter slackMessageAdapter;
 
-    public AIEntity generateResponse(InfraRequestDto requestDto) {
+    public AIEntity generateResponse(Ai ai) {
 
-        String aiPrompt = buildAIRequestPrompt(requestDto);
+        String aiPrompt = buildAIRequestPrompt(ai);
 
         String requestBody = "{ \"contents\": [ { \"parts\": [ { \"text\": \"" + aiPrompt.replace("\"", "\\\"") + "\" } ] } ] }";
 
@@ -56,8 +57,8 @@ public class AIService {
                 .answer(formattedResponse.toString())
                 .build();
 
-        String message = AIUtil.createSlackMessage(requestDto, aiDescription.getAnswer());
-        sendMessageToSlack(message, requestDto.getSnsAccount());
+        String message = AIUtil.createSlackMessage(ai, aiDescription.getAnswer());
+        sendMessageToSlack(message, ai.getSnsAccount());
         return aiRepository.save(aiDescription);
     }
 
@@ -101,12 +102,12 @@ public class AIService {
         slackMessageAdapter.sendMessage(slackToSendMessage);
     }
 
-    private String buildAIRequestPrompt(InfraRequestDto requestDto) {
+    private String buildAIRequestPrompt(Ai ai) {
         return String.format(
                 "상품: %s, 수량: %d, 요청: %s, 출발지: %s, 경유지: %s, 목적지: %s: "
                         + "위 데이터를 바탕으로 최종 발송 시한을 00월 00일 00시 형식으로만 답변해 주세요.",
-                requestDto.getProductName(), requestDto.getProductQuantity(), requestDto.getRequest(),
-                requestDto.getOriginHub(), requestDto.getDestinationHub(), requestDto.getCompanyAddress()
+                ai.getProductName(), ai.getProductQuantity(), ai.getRequest(),
+                ai.getOriginHub(), ai.getDestinationHub(), ai.getCompanyAddress()
         );
     }
 }
