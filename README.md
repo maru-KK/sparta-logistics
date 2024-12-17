@@ -14,6 +14,12 @@
 
 <br/><br/>
 
+## ✨ 서버 아키텍처
+<img width="1518" alt="image" src="https://github.com/user-attachments/assets/8e6f49c2-f388-4950-b1c5-8aa589b5e5da" />
+
+
+<br/><br/>
+
 ## ✨️ 서비스 구성 및 실행방법
 
 ### 🛡 Gateway Service
@@ -59,6 +65,16 @@
 
 <br/><br/>
 
+
+## ✨️ 트러블 슈팅
+
+#### 🚀 Jackson 직렬화 내부 동작 방식으로 인한 Redis 캐시 데이터 파싱 오류 [WIKI보기](https://github.com/maru-KK/sparta-logistics/wiki/%F0%9F%9A%80-%08Jackson-%EC%A7%81%EB%A0%AC%ED%99%94-%EB%82%B4%EB%B6%80-%EB%8F%99%EC%9E%91-%EB%B0%A9%EC%8B%9D%EC%9C%BC%EB%A1%9C-%EC%9D%B8%ED%95%9C-Redis-%EC%BA%90%EC%8B%9C-%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%8C%8C%EC%8B%B1-%EC%98%A4%EB%A5%98)
+#### 🚀 배송 담당자의 타입에 따른 조건부 속성 문제 [WIKI보기](https://github.com/maru-KK/sparta-logistics/wiki/%F0%9F%9A%80-%EB%B0%B0%EC%86%A1-%EB%8B%B4%EB%8B%B9%EC%9E%90%EC%9D%98-%ED%83%80%EC%9E%85%EC%97%90-%EB%94%B0%EB%A5%B8-%EC%A1%B0%EA%B1%B4%EB%B6%80-%EC%86%8D%EC%84%B1-%EB%AC%B8%EC%A0%9C)
+#### 🚀 이벤트 기반 통신구현 및 Kafka의 사용을 선택한 이유 (feat. RabbitMQ) [WIKI보기](https://github.com/maru-KK/sparta-logistics/wiki/%F0%9F%9A%80--%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EA%B8%B0%EB%B0%98-%ED%86%B5%EC%8B%A0%EA%B5%AC%ED%98%84-%EB%B0%8F-Kafka%EC%9D%98-%EC%82%AC%EC%9A%A9%EC%9D%84-%EC%84%A0%ED%83%9D%ED%95%9C-%EC%9D%B4%EC%9C%A0-(feat.-RabbitMQ))
+#### 🚀 RabbitMQ를 사용한 성능 개선(약 83% 성능 개선) [WIKI보기](https://github.com/maru-KK/sparta-logistics/wiki/%F0%9F%9A%80--RabbitMQ%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%9C-%EC%84%B1%EB%8A%A5-%EA%B0%9C%EC%84%A0)
+
+<br/><br/>
+
 ## ✨ 사용기술 및 개발환경
 
 **Development**
@@ -98,16 +114,8 @@
 
 <br/><br/>
 
-## ✨ 서버 아키텍처
-<img width="1518" alt="image" src="https://github.com/user-attachments/assets/8e6f49c2-f388-4950-b1c5-8aa589b5e5da" />
 
-
-<br/><br/>
 
 ## ✨ ERD
 ![image](https://github.com/user-attachments/assets/658074a7-e3f8-479e-85dc-303580ba470e)
-
-<br/><br/>
-
-## ✨️ 트러블 슈팅
 
