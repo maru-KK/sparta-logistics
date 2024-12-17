@@ -14,7 +14,6 @@ import com.sparta.logistics.delivery.infrastructure.external.hubCompany.HubCompa
 import com.sparta.logistics.delivery.infrastructure.external.hubCompany.dto.CompanyResponse;
 import com.sparta.logistics.delivery.infrastructure.external.hubCompany.dto.HubRouteResponseDto;
 import com.sparta.logistics.delivery.infrastructure.external.hubRoute.HubRoutePort;
-import com.sparta.logistics.delivery.infrastructure.external.infra.InfraPort;
 import com.sparta.logistics.delivery.infrastructure.external.product.ProductDetailResponse;
 import com.sparta.logistics.delivery.infrastructure.external.product.ProductPort;
 import com.sparta.logistics.delivery.infrastructure.persistence.search.DeliverySearchCondition;
@@ -56,9 +55,9 @@ public class DeliveryService {
         DeliveryPerson nextCompanyDeliveryPerson = deliveryPersonService.getNextCompanyDeliveryPerson(consumeCompany.hub().getHubId());
 
         // 수령인 정보 조회
-        UserDetailResponse userInfo = authPort.findUser(requestDto.orderedBy());
+        UserDetailResponse orderByUser = authPort.findUser(requestDto.orderedBy());
 
-        Delivery delivery = deliveryPort.save(requestDto, userInfo, supplyCompany, consumeCompany);
+        Delivery delivery = deliveryPort.save(requestDto, orderByUser, supplyCompany, consumeCompany);
 
         // 허브 루트 정보 조회
         HubRouteResponseDto hubRouteInfo = hubRoutePort.getRouteByOriginAndDestination(supplyCompany.hub().getHubId(), consumeCompany.hub().getHubId());
@@ -69,16 +68,16 @@ public class DeliveryService {
         deliveryEventAdapter.publish(delivery.createEvent());
 
         UserDetailResponse originHubUserInfo = authPort.findUser(supplyCompany.hub().getUserId());
-        sendAI(requestDto, nextCompanyDeliveryPerson, originHubUserInfo, supplyCompany, consumeCompany);
+        sendAI(requestDto, orderByUser, nextCompanyDeliveryPerson, originHubUserInfo, supplyCompany, consumeCompany);
 
         return delivery;
     }
 
-    private void sendAI(DeliveryCreateRequestDto requestDto, DeliveryPerson nextCompanyDeliveryPerson, UserDetailResponse userInfo, CompanyResponse supplyCompany, CompanyResponse consumeCompany) {
+    private void sendAI(DeliveryCreateRequestDto requestDto, UserDetailResponse orderByUser, DeliveryPerson nextCompanyDeliveryPerson, UserDetailResponse originHubUserInfo, CompanyResponse supplyCompany, CompanyResponse consumeCompany) {
         UserDetailResponse deliveryPersonInfo = authPort.findUser(nextCompanyDeliveryPerson.userId());
         ProductDetailResponse productDetailResponse = productPort.findOne(requestDto.productId());
 
-        infraService.sendMessage(requestDto.orderId(), userInfo, productDetailResponse, requestDto.quantity(), requestDto.request(), supplyCompany, consumeCompany, deliveryPersonInfo);
+        infraService.sendMessage(requestDto.orderId(), orderByUser, originHubUserInfo, productDetailResponse, requestDto.quantity(), requestDto.request(), supplyCompany, consumeCompany, deliveryPersonInfo);
     }
 
     public DeliveryResponseDto getDelivery(Long deliveryId) {

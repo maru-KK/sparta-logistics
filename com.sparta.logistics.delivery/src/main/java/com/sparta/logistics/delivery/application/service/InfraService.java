@@ -14,13 +14,13 @@ public class InfraService {
 
     private final InfraPort infraPort;
 
-    public void sendMessage(Long orderId, UserDetailResponse userInfo, ProductDetailResponse productDetailResponse,
+    public void sendMessage(Long orderId, UserDetailResponse orderByUser, UserDetailResponse originHubUserInfo, ProductDetailResponse productDetailResponse,
                             Integer quantity, String request, CompanyResponse supplyCompany, CompanyResponse consumeCompany,
                             UserDetailResponse nextCompanyDeliveryPerson
     ) {
         InfraCreateMessageCommand command = new InfraCreateMessageCommand(
                 orderId,
-                userInfo.username(),
+                orderByUser.username(),
                 productDetailResponse.getName(),
                 quantity,
                 request,
@@ -28,7 +28,7 @@ public class InfraService {
                 consumeCompany.hub().getAddress(),
                 consumeCompany.address(),
                 nextCompanyDeliveryPerson.username(),
-                userInfo.snsAccount()
+                originHubUserInfo.snsAccount()
         );
         infraPort.sendMessage(command);
     }

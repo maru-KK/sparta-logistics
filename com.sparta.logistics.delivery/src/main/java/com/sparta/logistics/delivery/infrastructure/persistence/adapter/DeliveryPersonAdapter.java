@@ -7,8 +7,8 @@ import com.sparta.logistics.delivery.infrastructure.external.auth.dto.UserDetail
 import com.sparta.logistics.delivery.infrastructure.external.hubCompany.HubCompanyPort;
 import com.sparta.logistics.delivery.infrastructure.persistence.entity.DeliveryPersonEntity;
 import com.sparta.logistics.delivery.infrastructure.persistence.entity.HubDeliveryPersonEntity;
-import com.sparta.logistics.delivery.infrastructure.persistence.repository.deliveryPerson.DeliveryPersonRepository;
 import com.sparta.logistics.delivery.infrastructure.persistence.repository.HubDeliveryPersonRepository;
+import com.sparta.logistics.delivery.infrastructure.persistence.repository.deliveryPerson.DeliveryPersonRepository;
 import com.sparta.logistics.delivery.presentation.util.exception.DeliveryPersonNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
-import static com.sparta.logistics.delivery.domain.vo.DeliveryPersonStatus.AVAILABLE;
+import static com.sparta.logistics.delivery.domain.vo.DeliveryPersonStatus.OFF_DUTY;
 import static com.sparta.logistics.delivery.domain.vo.DeliveryPersonType.COMPANY_DELIVERY;
 import static com.sparta.logistics.delivery.domain.vo.DeliveryPersonType.HUB_DELIVERY;
 
@@ -41,7 +41,7 @@ public class DeliveryPersonAdapter implements DeliveryPersonPort {
 
 
         // sequence 기준 오름 차순, 배달 가능 상태
-        List<DeliveryPersonEntity> deliveryPersonList = deliveryPersonRepository.findByHubDeliveryPerson(HUB_DELIVERY, AVAILABLE);
+        List<DeliveryPersonEntity> deliveryPersonList = deliveryPersonRepository.findByHubDeliveryPerson(HUB_DELIVERY, OFF_DUTY);
         if (deliveryPersonList.isEmpty()) {
             throw new IllegalArgumentException("허브 배송 가능한 당당자가 없습니다.");
         }
@@ -65,7 +65,7 @@ public class DeliveryPersonAdapter implements DeliveryPersonPort {
         Integer currentSequence = Optional.ofNullable(redisTemplate.opsForValue().get(key)).orElse(0);
 
         // sequence 기준 오름 차순, 배달 가능 상태
-        List<DeliveryPersonEntity> deliveryPersonList = deliveryPersonRepository.findByCompanyDeliveryPerson(COMPANY_DELIVERY, AVAILABLE, hubId);
+        List<DeliveryPersonEntity> deliveryPersonList = deliveryPersonRepository.findByCompanyDeliveryPerson(COMPANY_DELIVERY, OFF_DUTY, hubId);
         if (deliveryPersonList.isEmpty()) {
             throw new IllegalArgumentException("업체 배송 가능한 당당자가 없습니다.");
         }
@@ -126,7 +126,7 @@ public class DeliveryPersonAdapter implements DeliveryPersonPort {
     private DeliveryPersonEntity saveHubDeliveryPerson(DeliveryPerson deliveryPerson, UserDetailResponse user) {
         int sequence = 1;
 
-        List<DeliveryPersonEntity> hubDeliveryPersonList = deliveryPersonRepository.findByHubDeliveryPerson(HUB_DELIVERY, AVAILABLE);
+        List<DeliveryPersonEntity> hubDeliveryPersonList = deliveryPersonRepository.findByHubDeliveryPerson(HUB_DELIVERY, OFF_DUTY);
         if (!hubDeliveryPersonList.isEmpty()) {
             DeliveryPersonEntity deliveryPersonEntity = hubDeliveryPersonList.get(hubDeliveryPersonList.size() - 1);
             sequence = deliveryPersonEntity.getSequence() + 1;
@@ -138,7 +138,7 @@ public class DeliveryPersonAdapter implements DeliveryPersonPort {
     private DeliveryPerson saveCompanyDeliveryPerson(DeliveryPerson deliveryPerson, UserDetailResponse user) {
         int sequence = 1;
 
-        List<DeliveryPersonEntity> companyDeliveryPersonList = deliveryPersonRepository.findByCompanyDeliveryPerson(COMPANY_DELIVERY, AVAILABLE, deliveryPerson.hubId());
+        List<DeliveryPersonEntity> companyDeliveryPersonList = deliveryPersonRepository.findByCompanyDeliveryPerson(COMPANY_DELIVERY, OFF_DUTY, deliveryPerson.hubId());
 
         if (!companyDeliveryPersonList.isEmpty()) {
             DeliveryPersonEntity deliveryPersonEntity = companyDeliveryPersonList.get(companyDeliveryPersonList.size() - 1);
