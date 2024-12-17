@@ -11,7 +11,9 @@ public record DeliveryCreateRequestDto(
         String request,
         Long productId,
         Integer quantity,
-        LocalDateTime deliveryLimitedAt
+        LocalDateTime deliveryLimitedAt,
+         Long orderedBy
+
 
 ) {
     public static DeliveryCreateRequestDto from(OrderCreateEvent orderCreateEvent) {
@@ -22,7 +24,8 @@ public record DeliveryCreateRequestDto(
                 orderCreateEvent.getRequestMessage(),
                 orderCreateEvent.getProductId(),
                 orderCreateEvent.getQuantity(),
-                orderCreateEvent.getDeliveryLimitedAt()
+                orderCreateEvent.getDeliveryLimitedAt(),
+                orderCreateEvent.getOrderedBy()
         );
     }
 }

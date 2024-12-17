@@ -20,12 +20,14 @@ import com.sparta.logistics.delivery.infrastructure.external.product.ProductPort
 import com.sparta.logistics.delivery.infrastructure.persistence.search.DeliverySearchCondition;
 import com.sparta.logistics.delivery.presentation.dto.DeliveryResponseDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DeliveryService {
     private final DeliveryPort deliveryPort;
     private final DeliveryLogPort deliveryLogPort;
@@ -34,7 +36,7 @@ public class DeliveryService {
     private final HubCompanyPort hubCompanyPort;
     private final DeliveryPersonService deliveryPersonService;
     private final HubRoutePort hubRoutePort;
-    private final InfraPort infraPort;
+    private final InfraService infraService;
     private final ProductPort productPort;
     private final DeliveryEventAdapter deliveryEventAdapter;
 
@@ -54,7 +56,7 @@ public class DeliveryService {
         DeliveryPerson nextCompanyDeliveryPerson = deliveryPersonService.getNextCompanyDeliveryPerson(consumeCompany.hub().getHubId());
 
         // 수령인 정보 조회
-        UserDetailResponse userInfo = authPort.findUser(consumeCompany.userId());
+        UserDetailResponse userInfo = authPort.findUser(requestDto.orderedBy());
 
         Delivery delivery = deliveryPort.save(requestDto, userInfo, supplyCompany, consumeCompany);
 
@@ -66,7 +68,8 @@ public class DeliveryService {
 
         deliveryEventAdapter.publish(delivery.createEvent());
 
-//        sendAI(requestDto, nextCompanyDeliveryPerson, userInfo, supplyCompany, consumeCompany);
+        UserDetailResponse originHubUserInfo = authPort.findUser(supplyCompany.hub().getUserId());
+        sendAI(requestDto, nextCompanyDeliveryPerson, originHubUserInfo, supplyCompany, consumeCompany);
 
         return delivery;
     }
@@ -75,7 +78,7 @@ public class DeliveryService {
         UserDetailResponse deliveryPersonInfo = authPort.findUser(nextCompanyDeliveryPerson.userId());
         ProductDetailResponse productDetailResponse = productPort.findOne(requestDto.productId());
 
-        infraPort.send(requestDto.orderId(), userInfo, productDetailResponse, requestDto.quantity(), requestDto.request(), supplyCompany, consumeCompany, deliveryPersonInfo);
+        infraService.sendMessage(requestDto.orderId(), userInfo, productDetailResponse, requestDto.quantity(), requestDto.request(), supplyCompany, consumeCompany, deliveryPersonInfo);
     }
 
     public DeliveryResponseDto getDelivery(Long deliveryId) {
