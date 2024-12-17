@@ -8,7 +8,7 @@
 
 |팀원명|역할|
 |:---:|:---:|
-|<img src="https://avatars.githubusercontent.com/u/96504592?v=4" width="150px;" alt=""/><br /><sub><b>정현수</b></sub></a><br />|서비스 디스커버리 및 Gateway 구축, `인증`/`인가`/`주문`/`상품` 서비스, Kafka 비동기 통신, Redis 캐싱, slack 연동|
+|<img src="https://avatars.githubusercontent.com/u/96504592?v=4" width="150px;" alt=""/><br /><sub><b>정현수</b></sub></a><br />|서비스 디스커버리 및 Gateway 구축, `인증`/`인가`/`주문`/`상품` 서비스, Kafka, RabbitMQ 비동기 통신 환경 구축, Redis 캐싱, slack 연동|
 |<img src="https://avatars.githubusercontent.com/u/112970256?v=4" width="150px;" alt=""/><br /><sub><b>손동필</b></sub></a><br />||
 |<img src="https://avatars.githubusercontent.com/u/110008586?v=4" width="150px;" alt=""/><br /><sub><b>김민주</b></sub></a><br />||
 
@@ -18,7 +18,8 @@
 
 ### 🛡 Gateway Service
 
-> * 기능입니다.
+> * 토큰을 통한 사용자 요청 인증/인가 처리
+> * 로드밸런싱, 로깅
 
 
 ### 🛡 Auth Service
@@ -98,7 +99,8 @@
 <br/><br/>
 
 ## ✨ 서버 아키텍처
-![image](https://github.com/user-attachments/assets/836a3a21-e181-4069-9e6f-a8373d4474cd)
+<img width="1518" alt="image" src="https://github.com/user-attachments/assets/8e6f49c2-f388-4950-b1c5-8aa589b5e5da" />
+
 
 <br/><br/>
 
