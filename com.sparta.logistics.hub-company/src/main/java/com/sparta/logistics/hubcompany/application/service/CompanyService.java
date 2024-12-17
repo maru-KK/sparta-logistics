@@ -5,13 +5,14 @@ import com.sparta.logistics.hubcompany.application.dto.CompanyResponseDto;
 import com.sparta.logistics.hubcompany.application.dto.HubCompanyResponseDto;
 import com.sparta.logistics.hubcompany.application.dto.HubResponseDto;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.entity.CompanyEntity;
+import com.sparta.logistics.hubcompany.presentation.rest.dto.security.Actor;
 
 import java.util.List;
 
 public interface CompanyService {
-    CompanyResponseDto createCompany(CompanyRequestDto request, Long userId);
+    CompanyResponseDto createCompany(CompanyRequestDto request);
     CompanyEntity getCompanyById(Long companyId);
     HubResponseDto getHubByCompanyId(Long companyId);
-    void updateCompany(Long companyId, CompanyRequestDto request, Long userId);
+    void updateCompany(Long companyId, CompanyRequestDto request);
     List<HubCompanyResponseDto> getHubsAndCompaniesByUserId(Long userId);
 }

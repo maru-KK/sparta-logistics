@@ -6,6 +6,8 @@ import com.sparta.logistics.hubcompany.application.service.HubService;
 import com.sparta.logistics.hubcompany.domain.Hub;
 import com.sparta.logistics.hubcompany.infrastructure.cache.adaptor.HubCacheAdapter;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.entity.HubEntity;
+import com.sparta.logistics.hubcompany.presentation.rest.dto.security.Actor;
+import com.sparta.logistics.hubcompany.presentation.util.actor.LoginActor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,14 +43,8 @@ public class HubController {
 
     @PostMapping
     public ResponseEntity<String> createHub(@RequestBody HubCreationRequestDto request,
-                                            @RequestHeader("X-User-Id") Long userId,
-                                            @RequestHeader("X-Role") String role) {
-        if (!"HUB".equals(role) && !"MASTER".equals(role)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("허브 생성 권한이 없습니다.");
-        }
-
-        HubResponseDto hubResponse = hubService.createHub(request, userId);
+                                            @LoginActor Actor actor) {
+        HubResponseDto hubResponse = hubService.createHub(request);
         Long hubId = hubResponse.getHubId();
 
         return ResponseEntity.status(HttpStatus.CREATED)

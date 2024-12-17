@@ -1,7 +1,8 @@
 package com.sparta.logistics.auth.application.util;
 
-import java.util.Date;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
 
 @Component
 public class AccessTokenDateGenerator implements DateGenerator {

@@ -2,13 +2,14 @@ package com.sparta.logistics.hubcompany.application.service;
 
 import com.sparta.logistics.hubcompany.application.dto.HubCreationRequestDto;
 import com.sparta.logistics.hubcompany.application.dto.HubResponseDto;
-import com.sparta.logistics.hubcompany.domain.Hub;
-import com.sparta.logistics.hubcompany.infrastructure.cache.adaptor.HubCacheAdapter;
+import com.sparta.logistics.hubcompany.infrastructure.auth.AuthPort;
+import com.sparta.logistics.hubcompany.infrastructure.auth.dto.UserDetailResponse;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.entity.HubEntity;
 import com.sparta.logistics.hubcompany.infrastructure.persistence.repository.HubRepository;
+import com.sparta.logistics.hubcompany.presentation.exception.exceptions.InvalidAccessResourceException;
 import com.sparta.logistics.hubcompany.presentation.exception.exceptions.ResourceNotFoundException;
+import com.sparta.logistics.hubcompany.presentation.rest.dto.security.Role;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 public class HubServiceImpl implements HubService {
 
     private final HubRepository hubRepository;
-    private final HubCacheAdapter hubCacheAdapter;
+    private final AuthPort authPort;
 
     @Override
     public HubEntity getHubById(Long hubId) {
@@ -36,17 +37,24 @@ public class HubServiceImpl implements HubService {
     }
 
     @Override
-    public HubResponseDto createHub(HubCreationRequestDto request, Long userId) {
+    public HubResponseDto createHub(HubCreationRequestDto request) {
+        UserDetailResponse user = authPort.findUser(request.getUserId());
+
+        if (Role.valueOf(user.role()) != Role.MASTER) {
+            throw new InvalidAccessResourceException("허브 생성 권한이 없습니다.");
+        }
+
         HubEntity hubEntity = HubEntity.builder()
                 .name(request.getName())
                 .address(request.getAddress())
                 .latitude(request.getLatitude())
                 .longitude(request.getLongitude())
-                .userId(userId)
+                .userId(request.getUserId())
                 .build();
 
         HubEntity savedHub = hubRepository.save(hubEntity);
 
         return new HubResponseDto(savedHub);
     }
+
 }
